@@ -1,0 +1,34 @@
+{
+  "display": {
+    "icon": {
+      "item": "bunnyland:bunny_biscuit"
+    },
+    "title": {
+      "translate": "advancements.bunnyland.first_friend.title"
+    },
+    "description": {
+      "translate": "advancements.bunnyland.first_friend.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tamed": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#bunnyland:creatures"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "bunnyland:root"
+}

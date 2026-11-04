@@ -1,0 +1,48 @@
+{
+  "display": {
+    "icon": {
+      "item": "bunnyland:pet_journal"
+    },
+    "title": {
+      "translate": "advancements.bunnyland.root.title"
+    },
+    "description": {
+      "translate": "advancements.bunnyland.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/block/cherry_planks.png"
+  },
+  "criteria": {
+    "journal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "bunnyland:pet_journal"
+            ]
+          }
+        ]
+      }
+    },
+    "treat": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "bunnyland:pet_treats"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "journal",
+      "treat"
+    ]
+  ]
+}

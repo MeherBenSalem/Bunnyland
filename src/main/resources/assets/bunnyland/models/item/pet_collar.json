@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bunnyland:item/pet_collar",
+    "layer1": "bunnyland:item/pet_collar_bell"
+  }
+}

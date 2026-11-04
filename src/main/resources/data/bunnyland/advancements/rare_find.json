@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "bunnyland:star_clip"
+    },
+    "title": {
+      "translate": "advancements.bunnyland.rare_find.title"
+    },
+    "description": {
+      "translate": "advancements.bunnyland.rare_find.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "bred": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": {
+        "child": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#bunnyland:creatures",
+              "nbt": "{Rare:1b}"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "bunnyland:first_friend"
+}
