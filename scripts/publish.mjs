@@ -124,11 +124,16 @@ async function modrinth() {
       if (have.has(title)) { console.log(`Modrinth gallery: "${title}" already there`); continue; }
       if (DRY_RUN) { console.log(`[dry-run] Modrinth gallery: ${file}`); continue; }
       const query = new URLSearchParams({ ext: 'jpg', featured: String(i === 0), title, description, ordering: String(i) });
-      await call(`Modrinth gallery ${file}`, `${api}/project/${MODRINTH_ID}/gallery?${query}`, {
-        method: 'POST', headers: { ...auth, 'Content-Type': 'image/jpeg' },
-        body: fs.readFileSync(path.join(marketing, 'images', 'screenshots', file)),
-      });
-      console.log(`Modrinth gallery: added "${title}"`);
+      try {
+        await call(`Modrinth gallery ${file}`, `${api}/project/${MODRINTH_ID}/gallery?${query}`, {
+          method: 'POST', headers: { ...auth, 'Content-Type': 'image/jpeg' },
+          body: fs.readFileSync(path.join(marketing, 'images', 'screenshots', file)),
+        });
+        console.log(`Modrinth gallery: added "${title}"`);
+      } catch (error) {
+        // A gallery image (e.g. one already uploaded by hand) must not stop the version uploads.
+        console.warn(`Modrinth gallery: ${error.message}`);
+      }
     }
   }
 
