@@ -9,7 +9,7 @@ from pathlib import Path
 
 MODID = "bunnyland"
 PROJECT = Path(__file__).resolve().parents[2]
-ROOT = PROJECT / "src" / "main" / "resources"
+ROOT = PROJECT / "1.20.1" / "common" / "src" / "main" / "resources"
 ASSETS = ROOT / "assets" / MODID
 DATA = ROOT / "data" / MODID
 

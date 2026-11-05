@@ -1,0 +1,48 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+    runs {
+        configureEach {
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        }
+        client {
+            client()
+        }
+        server {
+            server()
+            programArgument '--nogui'
+        }
+        // Runs the mod's GameTests headlessly, then exits (non-zero on failure).
+        gameTestServer {
+            type = "gameTestServer"
+        }
+        // Developer visual check: builds a showcase world, saves run/screenshots/bunnyland_*.png and quits.
+        snapshots {
+            client()
+            systemProperty 'bunnyland.devshots', 'true'
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    compileOnly project(":common")
+    // Published Forge mods are SRG-mapped; MDG remaps only `mod*` configurations.
+    modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
+}
+
+jar {
+    finalizedBy('reobfJar')
+}
