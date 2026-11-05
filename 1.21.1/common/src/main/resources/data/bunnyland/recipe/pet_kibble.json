@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "tag": "bunnyland:kibble_bits"
+    }
+  ],
+  "result": {
+    "count": 6,
+    "id": "bunnyland:pet_kibble"
+  }
+}

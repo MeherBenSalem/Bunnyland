@@ -1,0 +1,323 @@
+{
+  "entity.bunny.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.bunny.ambient",
+    "sounds": [
+      "bunnyland:entity/bunny/ambient1",
+      "bunnyland:entity/bunny/ambient2",
+      "bunnyland:entity/bunny/ambient3"
+    ]
+  },
+  "entity.bunny.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.bunny.hurt",
+    "sounds": [
+      "bunnyland:entity/bunny/hurt1",
+      "bunnyland:entity/bunny/hurt2"
+    ]
+  },
+  "entity.bunny.death": {
+    "subtitle": "subtitles.bunnyland.entity.bunny.death",
+    "sounds": [
+      "bunnyland:entity/bunny/death1"
+    ]
+  },
+  "entity.bunny.happy": {
+    "subtitle": "subtitles.bunnyland.entity.bunny.happy",
+    "sounds": [
+      "bunnyland:entity/bunny/happy1",
+      "bunnyland:entity/bunny/happy2"
+    ]
+  },
+  "entity.blossom_fox.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.blossom_fox.ambient",
+    "sounds": [
+      "bunnyland:entity/blossom_fox/ambient1",
+      "bunnyland:entity/blossom_fox/ambient2",
+      "bunnyland:entity/blossom_fox/ambient3"
+    ]
+  },
+  "entity.blossom_fox.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.blossom_fox.hurt",
+    "sounds": [
+      "bunnyland:entity/blossom_fox/hurt1",
+      "bunnyland:entity/blossom_fox/hurt2"
+    ]
+  },
+  "entity.blossom_fox.death": {
+    "subtitle": "subtitles.bunnyland.entity.blossom_fox.death",
+    "sounds": [
+      "bunnyland:entity/blossom_fox/death1"
+    ]
+  },
+  "entity.blossom_fox.happy": {
+    "subtitle": "subtitles.bunnyland.entity.blossom_fox.happy",
+    "sounds": [
+      "bunnyland:entity/blossom_fox/happy1",
+      "bunnyland:entity/blossom_fox/happy2"
+    ]
+  },
+  "entity.cloud_kitty.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.cloud_kitty.ambient",
+    "sounds": [
+      "bunnyland:entity/cloud_kitty/ambient1",
+      "bunnyland:entity/cloud_kitty/ambient2",
+      "bunnyland:entity/cloud_kitty/ambient3"
+    ]
+  },
+  "entity.cloud_kitty.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.cloud_kitty.hurt",
+    "sounds": [
+      "bunnyland:entity/cloud_kitty/hurt1",
+      "bunnyland:entity/cloud_kitty/hurt2"
+    ]
+  },
+  "entity.cloud_kitty.death": {
+    "subtitle": "subtitles.bunnyland.entity.cloud_kitty.death",
+    "sounds": [
+      "bunnyland:entity/cloud_kitty/death1"
+    ]
+  },
+  "entity.cloud_kitty.purr": {
+    "subtitle": "subtitles.bunnyland.entity.cloud_kitty.purr",
+    "sounds": [
+      "bunnyland:entity/cloud_kitty/purr1",
+      "bunnyland:entity/cloud_kitty/purr2"
+    ]
+  },
+  "entity.strawberry_mouse.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.strawberry_mouse.ambient",
+    "sounds": [
+      "bunnyland:entity/strawberry_mouse/ambient1",
+      "bunnyland:entity/strawberry_mouse/ambient2",
+      "bunnyland:entity/strawberry_mouse/ambient3"
+    ]
+  },
+  "entity.strawberry_mouse.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.strawberry_mouse.hurt",
+    "sounds": [
+      "bunnyland:entity/strawberry_mouse/hurt1",
+      "bunnyland:entity/strawberry_mouse/hurt2"
+    ]
+  },
+  "entity.strawberry_mouse.death": {
+    "subtitle": "subtitles.bunnyland.entity.strawberry_mouse.death",
+    "sounds": [
+      "bunnyland:entity/strawberry_mouse/death1"
+    ]
+  },
+  "entity.honey_bear.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.honey_bear.ambient",
+    "sounds": [
+      "bunnyland:entity/honey_bear/ambient1",
+      "bunnyland:entity/honey_bear/ambient2",
+      "bunnyland:entity/honey_bear/ambient3"
+    ]
+  },
+  "entity.honey_bear.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.honey_bear.hurt",
+    "sounds": [
+      "bunnyland:entity/honey_bear/hurt1",
+      "bunnyland:entity/honey_bear/hurt2"
+    ]
+  },
+  "entity.honey_bear.death": {
+    "subtitle": "subtitles.bunnyland.entity.honey_bear.death",
+    "sounds": [
+      "bunnyland:entity/honey_bear/death1"
+    ]
+  },
+  "entity.honey_bear.happy": {
+    "subtitle": "subtitles.bunnyland.entity.honey_bear.happy",
+    "sounds": [
+      "bunnyland:entity/honey_bear/happy1",
+      "bunnyland:entity/honey_bear/happy2"
+    ]
+  },
+  "entity.moon_deer.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.moon_deer.ambient",
+    "sounds": [
+      "bunnyland:entity/moon_deer/ambient1",
+      "bunnyland:entity/moon_deer/ambient2",
+      "bunnyland:entity/moon_deer/ambient3"
+    ]
+  },
+  "entity.moon_deer.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.moon_deer.hurt",
+    "sounds": [
+      "bunnyland:entity/moon_deer/hurt1",
+      "bunnyland:entity/moon_deer/hurt2"
+    ]
+  },
+  "entity.moon_deer.death": {
+    "subtitle": "subtitles.bunnyland.entity.moon_deer.death",
+    "sounds": [
+      "bunnyland:entity/moon_deer/death1"
+    ]
+  },
+  "entity.pastel_axolotl.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.pastel_axolotl.ambient",
+    "sounds": [
+      "bunnyland:entity/pastel_axolotl/ambient1",
+      "bunnyland:entity/pastel_axolotl/ambient2",
+      "bunnyland:entity/pastel_axolotl/ambient3"
+    ]
+  },
+  "entity.pastel_axolotl.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.pastel_axolotl.hurt",
+    "sounds": [
+      "bunnyland:entity/pastel_axolotl/hurt1",
+      "bunnyland:entity/pastel_axolotl/hurt2"
+    ]
+  },
+  "entity.pastel_axolotl.death": {
+    "subtitle": "subtitles.bunnyland.entity.pastel_axolotl.death",
+    "sounds": [
+      "bunnyland:entity/pastel_axolotl/death1"
+    ]
+  },
+  "entity.tiny_swan.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.tiny_swan.ambient",
+    "sounds": [
+      "bunnyland:entity/tiny_swan/ambient1",
+      "bunnyland:entity/tiny_swan/ambient2",
+      "bunnyland:entity/tiny_swan/ambient3"
+    ]
+  },
+  "entity.tiny_swan.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.tiny_swan.hurt",
+    "sounds": [
+      "bunnyland:entity/tiny_swan/hurt1",
+      "bunnyland:entity/tiny_swan/hurt2"
+    ]
+  },
+  "entity.tiny_swan.death": {
+    "subtitle": "subtitles.bunnyland.entity.tiny_swan.death",
+    "sounds": [
+      "bunnyland:entity/tiny_swan/death1"
+    ]
+  },
+  "entity.rainbow_butterfly.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.rainbow_butterfly.ambient",
+    "sounds": [
+      "bunnyland:entity/rainbow_butterfly/ambient1",
+      "bunnyland:entity/rainbow_butterfly/ambient2"
+    ]
+  },
+  "entity.rainbow_butterfly.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.rainbow_butterfly.hurt",
+    "sounds": [
+      "bunnyland:entity/rainbow_butterfly/hurt1"
+    ]
+  },
+  "entity.rainbow_butterfly.death": {
+    "subtitle": "subtitles.bunnyland.entity.rainbow_butterfly.death",
+    "sounds": [
+      "bunnyland:entity/rainbow_butterfly/death1"
+    ]
+  },
+  "entity.cherry_blossom_bird.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.cherry_blossom_bird.ambient",
+    "sounds": [
+      "bunnyland:entity/cherry_blossom_bird/ambient1",
+      "bunnyland:entity/cherry_blossom_bird/ambient2",
+      "bunnyland:entity/cherry_blossom_bird/ambient3"
+    ]
+  },
+  "entity.cherry_blossom_bird.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.cherry_blossom_bird.hurt",
+    "sounds": [
+      "bunnyland:entity/cherry_blossom_bird/hurt1",
+      "bunnyland:entity/cherry_blossom_bird/hurt2"
+    ]
+  },
+  "entity.cherry_blossom_bird.death": {
+    "subtitle": "subtitles.bunnyland.entity.cherry_blossom_bird.death",
+    "sounds": [
+      "bunnyland:entity/cherry_blossom_bird/death1"
+    ]
+  },
+  "entity.cherry_blossom_bird.sing": {
+    "subtitle": "subtitles.bunnyland.entity.cherry_blossom_bird.sing",
+    "sounds": [
+      "bunnyland:entity/cherry_blossom_bird/sing1",
+      "bunnyland:entity/cherry_blossom_bird/sing2",
+      "bunnyland:entity/cherry_blossom_bird/sing3"
+    ]
+  },
+  "entity.dreamy_hamster.ambient": {
+    "subtitle": "subtitles.bunnyland.entity.dreamy_hamster.ambient",
+    "sounds": [
+      "bunnyland:entity/dreamy_hamster/ambient1",
+      "bunnyland:entity/dreamy_hamster/ambient2",
+      "bunnyland:entity/dreamy_hamster/ambient3"
+    ]
+  },
+  "entity.dreamy_hamster.hurt": {
+    "subtitle": "subtitles.bunnyland.entity.dreamy_hamster.hurt",
+    "sounds": [
+      "bunnyland:entity/dreamy_hamster/hurt1",
+      "bunnyland:entity/dreamy_hamster/hurt2"
+    ]
+  },
+  "entity.dreamy_hamster.death": {
+    "subtitle": "subtitles.bunnyland.entity.dreamy_hamster.death",
+    "sounds": [
+      "bunnyland:entity/dreamy_hamster/death1"
+    ]
+  },
+  "entity.pet.happy": {
+    "subtitle": "subtitles.bunnyland.entity.pet.happy",
+    "sounds": [
+      "bunnyland:entity/pet/happy1",
+      "bunnyland:entity/pet/happy2"
+    ]
+  },
+  "entity.pet.eat": {
+    "subtitle": "subtitles.bunnyland.entity.pet.eat",
+    "sounds": [
+      "bunnyland:entity/pet/eat1",
+      "bunnyland:entity/pet/eat2",
+      "bunnyland:entity/pet/eat3"
+    ]
+  },
+  "entity.pet.snore": {
+    "subtitle": "subtitles.bunnyland.entity.pet.snore",
+    "sounds": [
+      "bunnyland:entity/pet/snore1",
+      "bunnyland:entity/pet/snore2"
+    ]
+  },
+  "item.squeaky_carrot.squeak": {
+    "subtitle": "subtitles.bunnyland.item.squeaky_carrot.squeak",
+    "sounds": [
+      "bunnyland:item/squeaky_carrot/squeak1",
+      "bunnyland:item/squeaky_carrot/squeak2",
+      "bunnyland:item/squeaky_carrot/squeak3"
+    ]
+  },
+  "item.pet_collar.jingle": {
+    "subtitle": "subtitles.bunnyland.item.pet_collar.jingle",
+    "sounds": [
+      "bunnyland:item/pet_collar/jingle1",
+      "bunnyland:item/pet_collar/jingle2"
+    ]
+  },
+  "item.pet_carrier.capture": {
+    "subtitle": "subtitles.bunnyland.item.pet_carrier.capture",
+    "sounds": [
+      "bunnyland:item/pet_carrier/capture1"
+    ]
+  },
+  "item.pet_carrier.release": {
+    "subtitle": "subtitles.bunnyland.item.pet_carrier.release",
+    "sounds": [
+      "bunnyland:item/pet_carrier/release1"
+    ]
+  },
+  "block.feeding_bowl.fill": {
+    "subtitle": "subtitles.bunnyland.block.feeding_bowl.fill",
+    "sounds": [
+      "bunnyland:block/feeding_bowl/fill1",
+      "bunnyland:block/feeding_bowl/fill2"
+    ]
+  }
+}
