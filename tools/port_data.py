@@ -20,7 +20,7 @@ SOURCE = ROOT / "1.20.1" / "common" / "src" / "main" / "resources"
 MODID = "bunnyland"
 
 # (pack_format, min, max) for the mod's pack.mcmeta.
-PACK = {"1.21.1": (34, 34, 48), "26.2": (None, None, None), "26.3": (None, None, None)}
+PACK = {"1.21.1": (34, 34, 48), "26.2": (None, 88, 107), "26.3": (None, 97, 121)}
 # Data folders renamed in 1.21.
 RENAMED = {"loot_tables": "loot_table", "recipes": "recipe", "structures": "structure", "advancements": "advancement"}
 RENAMED_TAGS = {"items": "item", "blocks": "block", "entity_types": "entity_type", "fluids": "fluid", "game_events": "game_event"}
@@ -136,6 +136,56 @@ def item_definitions(assets, version):
         dump(out / f"{name}.json", {"model": definition})
 
 
+# ----------------------------------------------------------------------- spawn eggs (26.x)
+
+# Base and spot colours, as in 1.20.1's ModItems#eggColors (spawn eggs lost their tint colours in 1.21.5).
+EGG_COLORS = {
+    "cotton_bunny": (0xFFF9F5, 0xFFB3C9), "strawberry_bunny": (0xFF8FA4, 0x7CC46E), "moon_bunny": (0x5E5CAB, 0xFFF0A6),
+    "lavender_bunny": (0xC9B6F0, 0x9B7FE0), "snowball_bunny": (0xFFFFFF, 0xA9D8FF), "blossom_fox": (0xFFB4CA, 0xFFFFFF),
+    "cloud_kitty": (0xFFFFFF, 0xC4E5FF), "strawberry_mouse": (0xFFD7DF, 0xFF5C7A), "honey_bear": (0xF2B45B, 0xFFE3B0),
+    "moon_deer": (0x6B6DB8, 0xCFEAFF), "pastel_axolotl": (0xFFB9DA, 0xFF7FB6), "tiny_swan": (0xFFFFFF, 0xFF9E5E),
+    "rainbow_butterfly": (0xC7CEEA, 0xFF9AA2), "cherry_blossom_bird": (0xFFCADB, 0xFFFFFF), "dreamy_hamster": (0xFFE9C8, 0xB9A6F2),
+}
+# A 16x16 egg: '#' outline, 'o' base, 'h' highlight, 's' shade, 'x' spot.
+EGG = [
+    "................",
+    "......####......",
+    ".....#ohoo#.....",
+    "....#ohhoxo#....",
+    "....#ohoxxo#....",
+    "...#ooooooxo#...",
+    "...#oxxoooos#...",
+    "..#ooxxooxxos#..",
+    "..#ooooooxxos#..",
+    "..#oooxooooos#..",
+    "..#ooxxxoooss#..",
+    "..#soooooxoss#..",
+    "...#ssooooss#...",
+    "....#sssss##....",
+    ".....######.....",
+    "................",
+]
+
+
+def egg_textures(assets):
+    sys.path.insert(0, str(ROOT / "tools"))
+    from assetgen.core import Img as Image
+
+    def rgb(c, k=1.0):
+        return tuple(max(0, min(255, round(((c >> s) & 0xFF) * k))) for s in (16, 8, 0)) + (255,)
+
+    for sid, (base, spot) in EGG_COLORS.items():
+        img = Image(16, 16)
+        for y, row in enumerate(EGG):
+            for x, ch in enumerate(row):
+                colour = {"#": rgb(base, 0.45), "o": rgb(base), "h": rgb(base, 1.12), "s": rgb(base, 0.82), "x": rgb(spot)}.get(ch)
+                if colour:
+                    img.set(x, y, colour)
+        img.save(assets / "textures" / "item" / f"{sid}_spawn_egg.png")
+        dump(assets / "models" / "item" / f"{sid}_spawn_egg.json",
+             {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MODID}:item/{sid}_spawn_egg"}})
+
+
 # ----------------------------------------------------------------------- driver
 
 def port(version):
@@ -173,13 +223,23 @@ def port(version):
          {"replace": False, "values": [f"{MODID}:pastel_axolotl"]})
 
     if is_26(version):
-        item_definitions(target / "assets" / MODID, version)
+        assets = target / "assets" / MODID
+        egg_textures(assets)
+        item_definitions(assets, version)
+        # GeckoLib 5 reads geckolib/models/... and geckolib/animations/... (ids without folder or suffix).
+        (assets / "geckolib").mkdir(exist_ok=True)
+        (assets / "geo").rename(assets / "geckolib" / "models")
+        (assets / "animations").rename(assets / "geckolib" / "animations")
 
     fmt, lo, hi = PACK[version]
     pack = {"pack": {"description": {"text": "${mod_id} resources"}}}
     if fmt is not None:
         pack["pack"]["pack_format"] = fmt
         pack["pack"]["supported_formats"] = {"min_inclusive": lo, "max_inclusive": hi}
+    else:
+        # 1.21.9+: a format range instead of pack_format.
+        pack["pack"]["min_format"] = lo
+        pack["pack"]["max_format"] = hi
     dump(target / "pack.mcmeta", pack)
     print(f"ported resources to {target}")
 

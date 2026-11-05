@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glow_berries",
+    "minecraft:wheat",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "count": 4,
+    "id": "bunnyland:moon_cookie"
+  },
+  "group": "bunnyland:treats"
+}

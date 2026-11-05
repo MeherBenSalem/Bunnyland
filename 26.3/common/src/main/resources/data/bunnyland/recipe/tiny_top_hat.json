@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " B ",
+    "BPB"
+  ],
+  "key": {
+    "B": "minecraft:black_wool",
+    "P": "minecraft:pink_dye"
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:tiny_top_hat"
+  }
+}

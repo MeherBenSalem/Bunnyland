@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "FFF",
+    "F F"
+  ],
+  "key": {
+    "F": "#minecraft:small_flowers"
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:flower_crown"
+  }
+}

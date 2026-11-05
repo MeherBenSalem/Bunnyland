@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bunnyland:item/strawberry_bunny_spawn_egg"
+  }
+}

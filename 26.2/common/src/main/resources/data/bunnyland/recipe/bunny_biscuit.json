@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:carrot",
+    "minecraft:wheat",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "count": 4,
+    "id": "bunnyland:bunny_biscuit"
+  },
+  "group": "bunnyland:treats"
+}

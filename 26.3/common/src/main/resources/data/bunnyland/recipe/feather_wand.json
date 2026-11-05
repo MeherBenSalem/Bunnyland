@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "  F",
+    " S ",
+    "S  "
+  ],
+  "key": {
+    "F": "minecraft:feather",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:feather_wand"
+  }
+}

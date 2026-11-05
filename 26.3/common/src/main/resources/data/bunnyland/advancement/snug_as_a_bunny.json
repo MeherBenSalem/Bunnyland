@@ -1,0 +1,72 @@
+{
+  "display": {
+    "icon": {
+      "id": "bunnyland:pink_pet_bed"
+    },
+    "title": {
+      "translate": "advancements.bunnyland.snug_as_a_bunny.title"
+    },
+    "description": {
+      "translate": "advancements.bunnyland.snug_as_a_bunny.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pink": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "bunnyland:pink_pet_bed"
+          }
+        ]
+      }
+    },
+    "lavender": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "bunnyland:lavender_pet_bed"
+          }
+        ]
+      }
+    },
+    "mint": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "bunnyland:mint_pet_bed"
+          }
+        ]
+      }
+    },
+    "sky": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "bunnyland:sky_pet_bed"
+          }
+        ]
+      }
+    }
+  },
+  "parent": "bunnyland:first_friend",
+  "requirements": [
+    [
+      "pink",
+      "lavender",
+      "mint",
+      "sky"
+    ]
+  ]
+}

@@ -1,0 +1,29 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "license": "${license}",
+    "icon": "bunnyland_logo.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.sugarplumstudios.bunnyland.fabric.BunnylandFabric"
+        ],
+        "client": [
+            "com.sugarplumstudios.bunnyland.fabric.BunnylandFabricClient"
+        ]
+    },
+    "accessWidener": "${mod_id}.accesswidener",
+    "depends": {
+        "fabricloader": ">=0.15.0",
+        "fabric-api": "*",
+        "minecraft": "~${minecraft_version}",
+        "java": ">=${java_version}",
+        "geckolib": ">=${geckolib_min_version}"
+    }
+}

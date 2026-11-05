@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bunnyland:item/pet_carrier"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "bunnyland:occupied": 1
+      },
+      "model": "bunnyland:item/pet_carrier_full"
+    }
+  ]
+}

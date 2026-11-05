@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SLS",
+    " G "
+  ],
+  "key": {
+    "S": "minecraft:string",
+    "L": "minecraft:leather",
+    "G": "minecraft:gold_nugget"
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:pet_collar"
+  }
+}
