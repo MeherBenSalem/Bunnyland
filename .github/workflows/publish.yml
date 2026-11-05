@@ -1,0 +1,83 @@
+# Publishes every jar in release/<version>/ to Modrinth and CurseForge, and refreshes the Modrinth listing
+# (summary, description, icon, gallery) from marketing/. See scripts/publish.mjs.
+#
+# Secrets: a Modrinth personal access token (Create versions, Write projects, Read projects) and a CurseForge
+# upload API token. Several secret names are accepted; see the Publish step.
+
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (the folder under release/)
+        required: true
+        default: "1.0.0"
+      modrinth_id:
+        description: Modrinth project id (Bunnyland)
+        required: true
+        default: v33NVt8G
+      curseforge_id:
+        description: CurseForge project id (Bunny Land)
+        required: true
+        default: "1784884"
+      dry_run:
+        description: Resolve everything, but upload nothing
+        type: boolean
+        default: true
+      only:
+        description: Comma-separated targets to publish (e.g. fabric-26.2,forge-1.20.1); empty for all
+        default: ""
+      modrinth_skip:
+        description: Comma-separated targets to leave off Modrinth
+        default: ""
+      curseforge_skip:
+        description: Comma-separated targets to leave off CurseForge (fabric-1.20.1 was uploaded by hand)
+        default: fabric-1.20.1
+      skip_modrinth:
+        description: Skip Modrinth
+        type: boolean
+        default: false
+      skip_curseforge:
+        description: Skip CurseForge
+        type: boolean
+        default: false
+      update_listing:
+        description: Update the Modrinth summary, description and icon from marketing/
+        type: boolean
+        default: true
+      upload_gallery:
+        description: Add missing Modrinth gallery images from marketing/images/screenshots/
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Publish
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN || secrets.CURSEFORGE_API_TOKEN || secrets.CF_TOKEN || secrets.CF_API_TOKEN }}
+          MODRINTH_ID: ${{ inputs.modrinth_id }}
+          CURSEFORGE_ID: ${{ inputs.curseforge_id }}
+          # 1784884 was checked by hand to be Bunny Land; curseforge.com blocks the automatic check from Actions.
+          CURSEFORGE_ID_CONFIRMED: ${{ inputs.curseforge_id == '1784884' }}
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          ONLY: ${{ inputs.only }}
+          MODRINTH_SKIP: ${{ inputs.modrinth_skip }}
+          CURSEFORGE_SKIP: ${{ inputs.curseforge_skip }}
+          SKIP_MODRINTH: ${{ inputs.skip_modrinth }}
+          SKIP_CURSEFORGE: ${{ inputs.skip_curseforge }}
+          UPDATE_LISTING: ${{ inputs.update_listing }}
+          UPLOAD_GALLERY: ${{ inputs.upload_gallery }}
+        run: node scripts/publish.mjs
