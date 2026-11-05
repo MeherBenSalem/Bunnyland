@@ -18,16 +18,14 @@
     "bred": {
       "trigger": "minecraft:bred_animals",
       "conditions": {
-        "child": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "#bunnyland:creatures",
-              "nbt": "{Rare:1b}"
-            }
-          }
-        ]
+        "child": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "#bunnyland:creatures",
+            "minecraft:nbt": "{Rare:1b}"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     }
   },

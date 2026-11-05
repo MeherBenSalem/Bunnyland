@@ -23,7 +23,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:cotton_bunny"
+              "minecraft:entity_type": "bunnyland:cotton_bunny"
             }
           }
         ]
@@ -37,7 +37,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:strawberry_bunny"
+              "minecraft:entity_type": "bunnyland:strawberry_bunny"
             }
           }
         ]
@@ -51,7 +51,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:moon_bunny"
+              "minecraft:entity_type": "bunnyland:moon_bunny"
             }
           }
         ]
@@ -65,7 +65,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:lavender_bunny"
+              "minecraft:entity_type": "bunnyland:lavender_bunny"
             }
           }
         ]
@@ -79,7 +79,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:snowball_bunny"
+              "minecraft:entity_type": "bunnyland:snowball_bunny"
             }
           }
         ]
@@ -93,7 +93,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:blossom_fox"
+              "minecraft:entity_type": "bunnyland:blossom_fox"
             }
           }
         ]
@@ -107,7 +107,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:cloud_kitty"
+              "minecraft:entity_type": "bunnyland:cloud_kitty"
             }
           }
         ]
@@ -121,7 +121,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:strawberry_mouse"
+              "minecraft:entity_type": "bunnyland:strawberry_mouse"
             }
           }
         ]
@@ -135,7 +135,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:honey_bear"
+              "minecraft:entity_type": "bunnyland:honey_bear"
             }
           }
         ]
@@ -149,7 +149,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:moon_deer"
+              "minecraft:entity_type": "bunnyland:moon_deer"
             }
           }
         ]
@@ -163,7 +163,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:pastel_axolotl"
+              "minecraft:entity_type": "bunnyland:pastel_axolotl"
             }
           }
         ]
@@ -177,7 +177,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:tiny_swan"
+              "minecraft:entity_type": "bunnyland:tiny_swan"
             }
           }
         ]
@@ -191,7 +191,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:rainbow_butterfly"
+              "minecraft:entity_type": "bunnyland:rainbow_butterfly"
             }
           }
         ]
@@ -205,7 +205,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:cherry_blossom_bird"
+              "minecraft:entity_type": "bunnyland:cherry_blossom_bird"
             }
           }
         ]
@@ -219,7 +219,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:dreamy_hamster"
+              "minecraft:entity_type": "bunnyland:dreamy_hamster"
             }
           }
         ]

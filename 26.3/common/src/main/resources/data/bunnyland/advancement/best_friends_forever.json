@@ -18,211 +18,181 @@
     "cotton_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:cotton_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:cotton_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "strawberry_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:strawberry_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:strawberry_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "moon_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:moon_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:moon_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "lavender_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:lavender_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:lavender_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "snowball_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:snowball_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:snowball_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "blossom_fox": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:blossom_fox"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:blossom_fox"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "cloud_kitty": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:cloud_kitty"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:cloud_kitty"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "strawberry_mouse": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:strawberry_mouse"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:strawberry_mouse"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "honey_bear": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:honey_bear"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:honey_bear"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "moon_deer": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:moon_deer"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:moon_deer"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "pastel_axolotl": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:pastel_axolotl"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:pastel_axolotl"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "tiny_swan": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:tiny_swan"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:tiny_swan"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "rainbow_butterfly": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:rainbow_butterfly"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:rainbow_butterfly"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "cherry_blossom_bird": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:cherry_blossom_bird"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:cherry_blossom_bird"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "dreamy_hamster": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "bunnyland:dreamy_hamster"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:dreamy_hamster"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     }
   },

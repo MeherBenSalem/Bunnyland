@@ -23,7 +23,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:cotton_bunny"
+              "minecraft:entity_type": "bunnyland:cotton_bunny"
             }
           }
         ]
@@ -37,7 +37,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:strawberry_bunny"
+              "minecraft:entity_type": "bunnyland:strawberry_bunny"
             }
           }
         ]
@@ -51,7 +51,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:moon_bunny"
+              "minecraft:entity_type": "bunnyland:moon_bunny"
             }
           }
         ]
@@ -65,7 +65,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:lavender_bunny"
+              "minecraft:entity_type": "bunnyland:lavender_bunny"
             }
           }
         ]
@@ -79,7 +79,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "bunnyland:snowball_bunny"
+              "minecraft:entity_type": "bunnyland:snowball_bunny"
             }
           }
         ]

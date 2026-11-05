@@ -18,45 +18,37 @@
     "pink": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:block_state_property",
-            "block": "bunnyland:pink_pet_bed"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "bunnyland:pink_pet_bed"
+        }
       }
     },
     "lavender": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:block_state_property",
-            "block": "bunnyland:lavender_pet_bed"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "bunnyland:lavender_pet_bed"
+        }
       }
     },
     "mint": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:block_state_property",
-            "block": "bunnyland:mint_pet_bed"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "bunnyland:mint_pet_bed"
+        }
       }
     },
     "sky": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:block_state_property",
-            "block": "bunnyland:sky_pet_bed"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "bunnyland:sky_pet_bed"
+        }
       }
     }
   },

@@ -23,8 +23,8 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "#bunnyland:creatures",
-              "nbt": "{Rare:1b}"
+              "minecraft:entity_type": "#bunnyland:creatures",
+              "minecraft:nbt": "{Rare:1b}"
             }
           }
         ]
