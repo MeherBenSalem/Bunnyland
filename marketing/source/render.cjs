@@ -10,7 +10,10 @@ const { chromium } = require('playwright');
 // (plus one row in the compatibility table of curseforge/description.md).
 const RELEASE = { version: '1.0', name: 'First Bloom' };
 const VERSIONS = [
-  { minecraft: '1.20.1', loaders: ['Forge'] },
+  { minecraft: '1.20.1', loaders: ['Forge', 'Fabric'] },
+  { minecraft: '1.21.1', loaders: ['NeoForge', 'Fabric'] },
+  { minecraft: '26.2', loaders: ['NeoForge', 'Fabric'] },
+  { minecraft: '26.3', loaders: ['NeoForge', 'Fabric'] },
 ];
 const LOADERS = ['Fabric', 'Forge', 'NeoForge'].filter((loader) => VERSIONS.some((v) => v.loaders.includes(loader)));
 
@@ -199,8 +202,8 @@ const assets = {
       <div class="rule" style="width:620px;margin:16px 0 24px"></div>
       <div style="font-family:BlDisplay;font-size:40px;color:var(--plum);line-height:1.2">A world full of cute animals.</div>
       <div style="font-size:27px;color:var(--text);line-height:1.35;margin-top:8px">Discover, befriend, dress up and care for<br>fifteen fairytale creatures.</div>
-      <div style="margin-top:30px">${LOADERS.map((l) => `<span class="pill">${l}</span>`).join('')}<span class="pill ghost">GeckoLib 4</span>
-        <span style="font-family:BlDisplay;font-size:26px;color:var(--dim);margin-left:6px">Minecraft ${versionText}</span></div>
+      <div style="margin-top:30px">${LOADERS.map((l) => `<span class="pill">${l}</span>`).join('')}<span class="pill ghost">GeckoLib</span></div>
+      <div style="margin-top:16px;font-family:BlDisplay;font-size:26px;color:var(--dim)">Minecraft ${versionText}</div>
     </div>`),
 
   icon: () => page(512, 512, `

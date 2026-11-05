@@ -44,7 +44,7 @@ def recipes():
     shapeless("blossom_mochi", ["pink_petals", "wheat", "sugar"], "blossom_mochi", 4, "bunnyland:treats")
     shapeless("fish_cracker", ["#minecraft:fishes", "wheat"], "fish_cracker", 4, "bunnyland:treats")
     shapeless("honey_cake", ["honey_bottle", "wheat", "sugar", "egg"], "honey_cake", 2, "bunnyland:treats")
-    shapeless("seed_medley", ["wheat_seeds", "#forge:seeds", "#forge:seeds"], "seed_medley", 2, "bunnyland:treats")
+    shapeless("seed_medley", ["wheat_seeds", "#bunnyland:seeds", "#bunnyland:seeds"], "seed_medley", 2, "bunnyland:treats")
     shapeless("flower_nectar", ["honey_bottle", "#minecraft:small_flowers", "#minecraft:small_flowers"], "flower_nectar", 2,
               "bunnyland:treats")
     shapeless("pet_kibble", ["wheat", "wheat", "#bunnyland:kibble_bits"], "pet_kibble", 6)
@@ -112,6 +112,9 @@ def tags():
                         "minecraft:sweet_berries", "minecraft:melon_slice"])
     tag("pet_beds", [M + f"{c}_pet_bed" for c in BED_WOOL], registry="blocks")
     tag("pet_beds", [M + f"{c}_pet_bed" for c in BED_WOOL])
+    # Seeds for the Seed Medley: vanilla's, plus the loaders' common seed tags when another mod fills them.
+    tag("seeds", ["minecraft:wheat_seeds", "minecraft:beetroot_seeds", "minecraft:melon_seeds", "minecraft:pumpkin_seeds",
+                  "minecraft:torchflower_seeds", {"id": "#forge:seeds", "required": False}, {"id": "#c:seeds", "required": False}])
     tag("creatures_spawnable_on", ["#minecraft:animals_spawnable_on", "minecraft:snow", "minecraft:snow_block",
                                    "minecraft:podzol", "minecraft:coarse_dirt", "minecraft:moss_block", "minecraft:sand",
                                    "minecraft:dirt", "minecraft:rooted_dirt", "minecraft:mud"], registry="blocks")
@@ -124,7 +127,9 @@ def tags():
 
 
 def biome_modifier():
-    write_json(DATA / "forge" / "biome_modifier" / "creature_spawns.json", {"type": M + "creature_spawns"})
+    # Forge's biome modifier lives in the forge module (Fabric adds the spawns in code).
+    forge_data = ROOT.parents[3] / "forge" / "src" / "main" / "resources" / "data" / MODID
+    write_json(forge_data / "forge" / "biome_modifier" / "creature_spawns.json", {"type": M + "creature_spawns"})
 
 
 def advancements():

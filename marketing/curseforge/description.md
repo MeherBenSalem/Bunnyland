@@ -188,14 +188,21 @@ Spawn biomes come from the biome tags `bunnyland:spawns/<creature>`, and treats 
 | Minecraft | Loader | Java | Also install |
 | --- | --- | --- | --- |
 | 1.20.1 | Forge 47.1 or newer | 17+ | [GeckoLib 4](https://www.curseforge.com/minecraft/mc-mods/geckolib) (4.4.9 or newer) |
+| 1.20.1 | Fabric (Loader 0.16+, [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)) | 17+ | [GeckoLib 4](https://www.curseforge.com/minecraft/mc-mods/geckolib) (4.4.9 or newer) |
+| 1.21.1 | NeoForge 21.1 or newer | 21+ | [GeckoLib 4](https://www.curseforge.com/minecraft/mc-mods/geckolib) (4.8.4 or newer) |
+| 1.21.1 | Fabric ([Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)) | 21+ | [GeckoLib 4](https://www.curseforge.com/minecraft/mc-mods/geckolib) (4.8.4 or newer) |
+| 26.2 | NeoForge 26.2 | 25+ | [GeckoLib 5](https://www.curseforge.com/minecraft/mc-mods/geckolib) (5.5.5 or newer) |
+| 26.2 | Fabric ([Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)) | 25+ | [GeckoLib 5](https://www.curseforge.com/minecraft/mc-mods/geckolib) (5.5.5 or newer) |
+| 26.3 | NeoForge 26.3 | 25+ | [GeckoLib 5](https://www.curseforge.com/minecraft/mc-mods/geckolib) (5.5.7 or newer) |
+| 26.3 | Fabric ([Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)) | 25+ | [GeckoLib 5](https://www.curseforge.com/minecraft/mc-mods/geckolib) (5.5.7 or newer) |
 
-- Install Bunnyland and GeckoLib on **both the server and every client**.
+- Install Bunnyland and GeckoLib (plus Fabric API on Fabric) on **both the server and every client**.
 - Bunnyland is a mod. It does not work as a Paper, Spigot or Folia plugin.
 
 ![Questions](https://raw.githubusercontent.com/MeherBenSalem/Bunnyland/main/marketing/images/header-faq.png)
 
 **Do I need GeckoLib?**
-Yes. Bunnyland's models and animations run on GeckoLib 4 for Forge 1.20.1, version 4.4.9 or newer.
+Yes. Bunnyland's models and animations run on GeckoLib: GeckoLib 4 on 1.20.1 and 1.21.1, GeckoLib 5 on 26.2 and 26.3. The table above lists the minimum version for each.
 
 **Can my pet die or run away if I forget about it?**
 No. Happiness never drops below 10, and pets never leave. A lonely pet just won't breed until you give it some love.
@@ -213,7 +220,7 @@ They only empty full beehives and eat ripe berries, both respect the `mobGriefin
 Yes, with a data pack: add the biome to the `bunnyland:spawns/<creature>` biome tag.
 
 **Is there a Fabric or NeoForge version?**
-Bunnyland is for Forge 1.20.1.
+Yes. Bunnyland runs on Forge and Fabric for 1.20.1, and on NeoForge and Fabric for 1.21.1, 26.2 and 26.3. Every version has the same creatures, items and config.
 
 ![Gallery](https://raw.githubusercontent.com/MeherBenSalem/Bunnyland/main/marketing/images/header-gallery.png)
 

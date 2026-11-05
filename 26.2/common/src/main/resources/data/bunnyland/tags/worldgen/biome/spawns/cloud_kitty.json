@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:meadow",
+    "minecraft:cherry_grove",
+    "minecraft:plains",
+    "minecraft:windswept_hills"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:wheat_seeds"
+    },
+    {
+      "tag": "bunnyland:seeds"
+    },
+    {
+      "tag": "bunnyland:seeds"
+    }
+  ],
+  "result": {
+    "item": "bunnyland:seed_medley",
+    "count": 2
+  },
+  "group": "bunnyland:treats"
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#bunnyland:taming_treats/cotton_bunny",
+    "#bunnyland:breeding_food/cotton_bunny",
+    "bunnyland:feather_wand"
+  ]
+}

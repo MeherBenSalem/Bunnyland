@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "bunnyland:cotton_fluff",
+    "bunnyland:cotton_fluff"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:string"
+  }
+}

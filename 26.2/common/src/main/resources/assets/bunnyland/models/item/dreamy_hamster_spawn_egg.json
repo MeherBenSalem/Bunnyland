@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bunnyland:item/dreamy_hamster_spawn_egg"
+  }
+}

@@ -11,8 +11,8 @@ Usage (paths are resolved from this file, so any working directory works):
     python tools/generate_sounds.py
 
 Inputs : tools/assetgen/sound_events.py   SOUND_EVENTS: event -> (subtitle, variants, brief)
-Outputs: src/main/resources/assets/bunnyland/sounds/**.ogg   (folder wiped + regenerated)
-         src/main/resources/assets/bunnyland/sounds.json
+Outputs: 1.20.1/common/src/main/resources/assets/bunnyland/sounds/**.ogg   (folder wiped + regenerated)
+         1.20.1/common/src/main/resources/assets/bunnyland/sounds.json
 
 Art direction: adorable / fairytale -- everything soft, sweet and pleasant, never harsh.
 """
@@ -42,7 +42,7 @@ NAMESPACE = "bunnyland"
 
 TOOLS_DIR = Path(__file__).resolve().parent
 ROOT = TOOLS_DIR.parent
-ASSETS = ROOT / "src" / "main" / "resources" / "assets" / NAMESPACE
+ASSETS = ROOT / "1.20.1" / "common" / "src" / "main" / "resources" / "assets" / NAMESPACE
 SOUNDS_DIR = ASSETS / "sounds"
 SOUNDS_JSON = ASSETS / "sounds.json"
 EVENTS_FILE = TOOLS_DIR / "assetgen" / "sound_events.py"

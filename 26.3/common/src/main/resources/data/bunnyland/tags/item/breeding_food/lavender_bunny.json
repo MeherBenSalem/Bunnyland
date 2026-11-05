@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:carrot",
+    "minecraft:allium",
+    "minecraft:lilac",
+    "bunnyland:bunny_biscuit"
+  ]
+}

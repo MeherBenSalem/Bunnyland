@@ -1,0 +1,33 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = neoforge_version
+    interfaceInjectionData.from(rootProject.file('gradle/geckolib/interface_injections.json'))
+    accessTransformers.from(project(':common').file('src/main/resources/META-INF/accesstransformer.cfg').absolutePath)
+    runs {
+        configureEach {
+            systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
+        }
+        client {
+            client()
+            // Optional dev convenience: -PclientArgs="--username Dev --quickPlayMultiplayer localhost:25565"
+            if (project.hasProperty('clientArgs')) programArguments.addAll(project.property('clientArgs').toString().split(' '))
+        }
+        server {
+            server()
+            programArgument '--nogui'
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    implementation "maven.modrinth:geckolib:${geckolib_neoforge_id}"
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#bunnyland:taming_treats/cherry_blossom_bird",
+    "#bunnyland:breeding_food/cherry_blossom_bird",
+    "bunnyland:feather_wand"
+  ]
+}

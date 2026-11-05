@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:pink_petals",
+    "minecraft:wheat",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "count": 4,
+    "id": "bunnyland:blossom_mochi"
+  },
+  "group": "bunnyland:treats"
+}

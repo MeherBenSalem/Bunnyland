@@ -26,3 +26,8 @@ forge*changelog.txt
 
 # python
 __pycache__
+
+# per-workspace build output
+**/build/
+**/.gradle/
+**/run/

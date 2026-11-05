@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bunnyland:item/cherry_blossom_bird_spawn_egg"
+  }
+}

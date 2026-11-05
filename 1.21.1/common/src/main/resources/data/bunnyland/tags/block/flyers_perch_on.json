@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#bunnyland:creatures_spawnable_on",
+    "#minecraft:leaves",
+    "#minecraft:logs"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WWW",
+    "W  "
+  ],
+  "key": {
+    "W": "#minecraft:wool"
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:cozy_scarf"
+  }
+}

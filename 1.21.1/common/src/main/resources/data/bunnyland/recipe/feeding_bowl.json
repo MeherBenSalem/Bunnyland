@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "T T",
+    " T "
+  ],
+  "key": {
+    "T": {
+      "tag": "minecraft:terracotta"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:feeding_bowl"
+  }
+}

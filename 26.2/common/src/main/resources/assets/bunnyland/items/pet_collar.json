@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "bunnyland:item/pet_collar",
+    "tints": [
+      {
+        "type": "minecraft:dye",
+        "default": 16230600
+      }
+    ]
+  }
+}

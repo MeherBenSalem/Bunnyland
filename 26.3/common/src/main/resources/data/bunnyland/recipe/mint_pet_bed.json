@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WFW",
+    "PPP"
+  ],
+  "key": {
+    "W": "minecraft:lime_wool",
+    "F": "#bunnyland:stuffing",
+    "P": "#minecraft:wooden_slabs"
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:mint_pet_bed"
+  },
+  "group": "bunnyland:pet_beds"
+}

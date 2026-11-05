@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bunnyland:item/snowball_bunny_spawn_egg"
+  }
+}

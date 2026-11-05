@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WFW",
+    "PPP"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:pink_wool"
+    },
+    "F": {
+      "tag": "bunnyland:stuffing"
+    },
+    "P": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "bunnyland:pink_pet_bed"
+  },
+  "group": "bunnyland:pet_beds"
+}

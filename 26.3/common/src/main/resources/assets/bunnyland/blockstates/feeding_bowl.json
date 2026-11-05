@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "food=0": {
+      "model": "bunnyland:block/feeding_bowl"
+    },
+    "food=1": {
+      "model": "bunnyland:block/feeding_bowl_low"
+    },
+    "food=2": {
+      "model": "bunnyland:block/feeding_bowl_low"
+    },
+    "food=3": {
+      "model": "bunnyland:block/feeding_bowl_half"
+    },
+    "food=4": {
+      "model": "bunnyland:block/feeding_bowl_half"
+    },
+    "food=5": {
+      "model": "bunnyland:block/feeding_bowl_half"
+    },
+    "food=6": {
+      "model": "bunnyland:block/feeding_bowl_full"
+    },
+    "food=7": {
+      "model": "bunnyland:block/feeding_bowl_full"
+    },
+    "food=8": {
+      "model": "bunnyland:block/feeding_bowl_full"
+    }
+  }
+}

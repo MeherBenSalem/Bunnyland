@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#minecraft:fishes",
+    "minecraft:wheat"
+  ],
+  "result": {
+    "count": 4,
+    "id": "bunnyland:fish_cracker"
+  },
+  "group": "bunnyland:treats"
+}

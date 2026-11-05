@@ -1,0 +1,90 @@
+{
+  "display": {
+    "icon": {
+      "id": "bunnyland:cotton_bunny_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.bunnyland.fluffle.title"
+    },
+    "description": {
+      "translate": "advancements.bunnyland.fluffle.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "cotton_bunny": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "bunnyland:cotton_bunny"
+            }
+          }
+        ]
+      }
+    },
+    "strawberry_bunny": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "bunnyland:strawberry_bunny"
+            }
+          }
+        ]
+      }
+    },
+    "moon_bunny": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "bunnyland:moon_bunny"
+            }
+          }
+        ]
+      }
+    },
+    "lavender_bunny": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "bunnyland:lavender_bunny"
+            }
+          }
+        ]
+      }
+    },
+    "snowball_bunny": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "bunnyland:snowball_bunny"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "bunnyland:first_friend"
+}

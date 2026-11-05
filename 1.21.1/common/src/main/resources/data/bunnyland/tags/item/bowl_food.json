@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "bunnyland:pet_kibble",
+    "bunnyland:bunny_biscuit",
+    "bunnyland:strawberry_tart",
+    "bunnyland:moon_cookie",
+    "bunnyland:blossom_mochi",
+    "bunnyland:fish_cracker",
+    "bunnyland:honey_cake",
+    "bunnyland:seed_medley",
+    "bunnyland:flower_nectar"
+  ]
+}
