@@ -18,71 +18,61 @@
     "cotton_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "bunnyland:cotton_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:cotton_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "strawberry_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "bunnyland:strawberry_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:strawberry_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "moon_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "bunnyland:moon_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:moon_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "lavender_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "bunnyland:lavender_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:lavender_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     },
     "snowball_bunny": {
       "trigger": "minecraft:tame_animal",
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "bunnyland:snowball_bunny"
-            }
-          }
-        ]
+        "entity": {
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "bunnyland:snowball_bunny"
+          },
+          "type": "minecraft:entity_properties"
+        }
       }
     }
   },

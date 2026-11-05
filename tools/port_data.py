@@ -92,6 +92,12 @@ def advancement(obj, version):
                 for cond in conditions if isinstance(conditions, list) else []:
                     if isinstance(cond, dict) and isinstance(cond.get("predicate"), dict):
                         cond["predicate"] = {ENTITY_SUB.get(k, k): v for k, v in cond["predicate"].items()}
+    if newer_conditions(version):
+        for criterion in obj.get("criteria", {}).values():
+            conditions = criterion.get("conditions", {})
+            for key, value in list(conditions.items()):
+                if isinstance(value, list) and value and isinstance(value[0], dict) and "condition" in value[0]:
+                    conditions[key] = condition_list_263(value)
     if is_26(version) and "background" in obj.get("display", {}):
         # 1.21.5+: the background is a texture id without the textures/ prefix and .png suffix.
         bg = obj["display"]["background"]
@@ -99,6 +105,49 @@ def advancement(obj, version):
             ns, path = bg.split(":", 1)
             obj["display"]["background"] = ns + ":" + path[len("textures/"):-len(".png")]
     return obj
+
+
+# ----------------------------------------------------------------------- 26.3 condition/modifier format
+
+def newer_conditions(version):
+    return version == "26.3"
+
+
+def condition_263(cond):
+    """26.3: a loot condition is {"type": ...}; block_state_property became match_block."""
+    cond = dict(cond)
+    if "condition" in cond:
+        cond["type"] = cond.pop("condition")
+    if cond.get("type") == "minecraft:block_state_property":
+        cond["type"] = "minecraft:match_block"
+        cond["blocks"] = cond.pop("block")
+        if "properties" in cond:
+            cond["state"] = cond.pop("properties")
+    for key in ("term", "terms"):
+        if key in cond:
+            cond[key] = condition_263(cond[key]) if isinstance(cond[key], dict) else [condition_263(t) for t in cond[key]]
+    return cond
+
+
+def condition_list_263(conds):
+    """26.3: a list of conditions is one condition (all_of when there are several)."""
+    conds = [condition_263(c) for c in conds]
+    return conds[0] if len(conds) == 1 else {"type": "minecraft:all_of", "terms": conds}
+
+
+def modifiers_263(holder):
+    """26.3: "functions" became "modifier", "conditions" became "condition", and a function's key is "type"."""
+    if "functions" in holder:
+        fns = []
+        for fn in holder.pop("functions"):
+            fn = dict(fn)
+            fn["type"] = fn.pop("function")
+            if "conditions" in fn:
+                fn["condition"] = condition_list_263(fn.pop("conditions"))
+            fns.append(fn)
+        holder["modifier"] = fns
+    if "conditions" in holder:
+        holder["condition"] = condition_list_263(holder.pop("conditions"))
 
 
 # ----------------------------------------------------------------------- loot tables
@@ -119,6 +168,12 @@ def loot_table(obj, version):
         pool["functions"] = [loot_function(f) for f in pool.get("functions", [])]
         if not pool["functions"]:
             del pool["functions"]
+        if newer_conditions(version):
+            for entry in pool.get("entries", []):
+                modifiers_263(entry)
+            modifiers_263(pool)
+    if newer_conditions(version):
+        modifiers_263(obj)
     return obj
 
 
