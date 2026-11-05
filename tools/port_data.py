@@ -74,6 +74,9 @@ def item_predicate(pred):
     return pred
 
 
+ENTITY_SUB = {"type": "minecraft:entity_type", "nbt": "minecraft:nbt"}
+
+
 def advancement(obj, version):
     icon = obj.get("display", {}).get("icon")
     if icon and "item" in icon:
@@ -82,6 +85,13 @@ def advancement(obj, version):
         conditions = criterion.get("conditions", {})
         if criterion.get("trigger") == "minecraft:inventory_changed":
             conditions["items"] = [item_predicate(p) for p in conditions.get("items", [])]
+    if is_26(version):
+        # 1.21.5+: an entity predicate is a map of namespaced sub-predicates.
+        for criterion in obj.get("criteria", {}).values():
+            for conditions in criterion.get("conditions", {}).values():
+                for cond in conditions if isinstance(conditions, list) else []:
+                    if isinstance(cond, dict) and isinstance(cond.get("predicate"), dict):
+                        cond["predicate"] = {ENTITY_SUB.get(k, k): v for k, v in cond["predicate"].items()}
     if is_26(version) and "background" in obj.get("display", {}):
         # 1.21.5+: the background is a texture id without the textures/ prefix and .png suffix.
         bg = obj["display"]["background"]
