@@ -16,10 +16,11 @@ The description leads with the pitch, then the creatures, where to find them (wi
 
 ## Adding a Minecraft version
 
-The supported versions are listed in exactly two places:
+The supported versions are listed in these places:
 
-1. `VERSIONS` at the top of [`source/render.cjs`](source/render.cjs). Add one line, for example `{ minecraft: '1.21.1', loaders: ['NeoForge'] },`. The banner's loader pills and version line are built from it. Then rerun the script for `banner`.
-2. The table under **Downloads & Compatibility** in `curseforge/description.md`. Add one row.
+1. `VERSIONS` at the top of [`source/render.cjs`](source/render.cjs). Add one line, for example `{ minecraft: '26.4', loaders: ['NeoForge', 'Fabric'] },`. The banner's loader pills and version line are built from it. Then rerun the script for `banner`.
+2. The table under **Downloads & Compatibility** in `curseforge/description.md`. Add one row per loader.
+3. The FAQ answers **Do I need GeckoLib?** and **Is there a Fabric or NeoForge version?** in the same file.
 
 No other copy or artwork names a Minecraft version. A new release name or number goes in `RELEASE` in `render.cjs` and in the banner's alt text on the first line of the description.
 
@@ -46,7 +47,7 @@ No other copy or artwork names a Minecraft version. A new release name or number
 
 ### How the screenshots were captured
 
-Every screenshot is an unedited capture of the **1.20.1 Forge development client** (`./gradlew runClient`, Bunnyland 1.0.0, GeckoLib 4.8.4, default configuration) with software rendering (Mesa llvmpipe) at 1920×1080, GUI scale 3 and Fancy graphics. The client joined a dev server (`./gradlew runServer`) and was driven over RCON and xdotool; [`source/devrun.sh`](source/devrun.sh) starts both under Xvfb, [`source/session.py`](source/session.py) talks to them, and [`source/stage.py`](source/stage.py) holds the staging helpers (ground probes, frozen creatures, camera placement, bursts).
+Every screenshot is an unedited capture of the **1.20.1 Forge development client** (the creatures look the same on every loader and version) (`./gradlew runClient`, Bunnyland 1.0.0, GeckoLib 4.8.4, default configuration) with software rendering (Mesa llvmpipe) at 1920×1080, GUI scale 3 and Fancy graphics. The client joined a dev server (`./gradlew runServer`) and was driven over RCON and xdotool; [`source/devrun.sh`](source/devrun.sh) starts both under Xvfb, [`source/session.py`](source/session.py) talks to them, and [`source/stage.py`](source/stage.py) holds the staging helpers (ground probes, frozen creatures, camera placement, bursts).
 
 - **World:** a fresh world, "showcase", seed `sugarplum-meadows` (`server.properties`), in Peaceful with the day cycle and weather off. The scenes are in the world's own generated terrain: a cherry grove at about −80 −1056, the snowy taiga and frozen lake at spawn, and the river and forest at about 240 −150.
 - **Changes for the shots:** grass in front of the camera was cleared so it does not hide the creatures. The care shot places the four pet beds and three feeding bowls; the forest shot places a beehive, two berry bushes and a few flowers.

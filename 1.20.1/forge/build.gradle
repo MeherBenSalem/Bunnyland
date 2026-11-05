@@ -15,6 +15,8 @@ legacyForge {
         }
         client {
             client()
+            // Optional dev convenience: -PclientArgs="--username Dev --quickPlayMultiplayer localhost:25565"
+            if (project.hasProperty('clientArgs')) programArguments.addAll(project.property('clientArgs').toString().split(' '))
         }
         server {
             server()
