@@ -1,0 +1,91 @@
+# Builds every Minecraft version (Fabric, Forge and NeoForge jars), then starts a real Fabric client on 26.2 and
+# 26.3 that spawns every creature (see <version>/fabric/src/gametest). Runs on pull requests, on pushes to fix/**
+# branches and by hand. It never publishes anything.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: ["fix/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.minecraft }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { minecraft: "1.20.1", java: "17" }
+          - { minecraft: "1.21.1", java: "21" }
+          - { minecraft: "26.2", java: "25" }
+          - { minecraft: "26.3", java: "25" }
+    defaults:
+      run:
+        working-directory: ${{ matrix.minecraft }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew
+      - name: Build
+        run: ./gradlew build --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jars-${{ matrix.minecraft }}
+          path: ${{ matrix.minecraft }}/*/build/libs/*.jar
+
+  client-test:
+    name: In-game test, Fabric ${{ matrix.minecraft }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        minecraft: ["26.2", "26.3"]
+    defaults:
+      run:
+        working-directory: ${{ matrix.minecraft }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Xvfb and Mesa
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri libglx-mesa0 mesa-utils
+      - run: chmod +x gradlew
+      - name: Run the client game test
+        timeout-minutes: 25
+        run: xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :fabric:runClientGameTest -PclientGameTest --stacktrace
+      - name: Crash reports and errors
+        if: always()
+        run: |
+          for f in fabric/build/run/clientGameTest/crash-reports/*.txt fabric/run/crash-reports/*.txt; do
+            [ -f "$f" ] && { echo "=== $f"; head -150 "$f"; }
+          done
+          for f in $(find fabric -name latest.log 2>/dev/null); do
+            echo "=== $f"; grep -n -E "bunnyland-gametest|ERROR|Exception|Caused by|at com\.sugarplum|at com\.geckolib" "$f" | head -200
+          done
+          true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: client-test-${{ matrix.minecraft }}
+          path: |
+            ${{ matrix.minecraft }}/fabric/build/run/**/screenshots/**
+            ${{ matrix.minecraft }}/fabric/build/run/**/logs/**
+            ${{ matrix.minecraft }}/fabric/build/run/**/crash-reports/**
+            ${{ matrix.minecraft }}/fabric/run/**/crash-reports/**
+          if-no-files-found: ignore

@@ -1,0 +1,12 @@
+// Client game tests: start a real client in a fresh world, spawn every creature and watch them for a while.
+// Applied only when the build is run with -PclientGameTest, so normal builds and release jars are unchanged.
+// Run with: ./gradlew :fabric:runClientGameTest -PclientGameTest (needs a display; CI uses Xvfb).
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "bunnyland_gametest"
+        enableGameTests = false
+        enableClientGameTests = true
+        eula = true
+    }
+}

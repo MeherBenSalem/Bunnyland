@@ -27,3 +27,7 @@ loom {
         }
     }
 }
+
+if (project.hasProperty('clientGameTest')) {
+    apply from: 'gametest.gradle'
+}
