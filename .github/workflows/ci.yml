@@ -1,6 +1,7 @@
-# Builds every Minecraft version (Fabric, Forge and NeoForge jars), then starts a real Fabric client on 26.2 and
-# 26.3 that spawns every creature (see <version>/fabric/src/gametest). Runs on pull requests, on pushes to fix/**
-# branches and by hand. It never publishes anything.
+# Builds every Minecraft version (Fabric, Forge and NeoForge jars), starts a dev server for every version and
+# loader that spawns every creature (scripts/server-smoke-test.sh), and starts a real Fabric client on 26.2 and 26.3
+# that spawns and renders them (<version>/fabric/src/gametest). Runs on pull requests, on pushes to fix/** branches
+# and by hand. It never publishes anything.
 
 name: CI
 
@@ -33,10 +34,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |
-            17
-            21
-            25
+          java-version: ${{ matrix.java }}
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - name: Build
@@ -45,6 +43,33 @@ jobs:
         with:
           name: jars-${{ matrix.minecraft }}
           path: ${{ matrix.minecraft }}/*/build/libs/*.jar
+
+  server-test:
+    name: Server test, ${{ matrix.loader }} ${{ matrix.minecraft }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { minecraft: "1.20.1", loader: fabric, java: "17" }
+          - { minecraft: "1.20.1", loader: forge, java: "17" }
+          - { minecraft: "1.21.1", loader: fabric, java: "21" }
+          - { minecraft: "1.21.1", loader: neoforge, java: "21" }
+          - { minecraft: "26.2", loader: fabric, java: "25" }
+          - { minecraft: "26.2", loader: neoforge, java: "25" }
+          - { minecraft: "26.3", loader: fabric, java: "25" }
+          - { minecraft: "26.3", loader: neoforge, java: "25" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ${{ matrix.minecraft }}/gradlew scripts/server-smoke-test.sh
+      - name: Spawn every creature on a server
+        timeout-minutes: 25
+        run: scripts/server-smoke-test.sh ${{ matrix.minecraft }} ${{ matrix.loader }}
 
   client-test:
     name: In-game test, Fabric ${{ matrix.minecraft }}
