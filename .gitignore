@@ -31,3 +31,4 @@ __pycache__
 **/build/
 **/.gradle/
 **/run/
+server-smoke-*.log

@@ -1,0 +1,15 @@
+{
+    "schemaVersion": 1,
+    "id": "bunnyland_gametest",
+    "version": "1.0.0",
+    "name": "Bunnyland client game tests",
+    "environment": "client",
+    "entrypoints": {
+        "fabric-client-gametest": [
+            "com.sugarplumstudios.bunnyland.gametest.CreatureClientGameTest"
+        ]
+    },
+    "depends": {
+        "bunnyland": "*"
+    }
+}

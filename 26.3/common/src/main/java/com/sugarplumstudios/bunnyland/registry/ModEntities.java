@@ -88,7 +88,10 @@ public final class ModEntities {
         AttributeSupplier.Builder b = Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, health)
                 .add(Attributes.MOVEMENT_SPEED, speed)
-                .add(Attributes.FOLLOW_RANGE, 16.0D);
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
+                // TemptGoal reads this since 1.21.5; without it every creature crashes the game as soon as its
+                // tempt goal runs (vanilla animals get it from Animal.createAnimalAttributes()).
+                .add(Attributes.TEMPT_RANGE, 10.0D);
         if (flying > 0) b.add(Attributes.FLYING_SPEED, flying);
         // Moon Deer step up full blocks.
         if (species == Species.MOON_DEER) b.add(Attributes.STEP_HEIGHT, 1.0D);
