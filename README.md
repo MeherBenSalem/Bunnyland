@@ -21,7 +21,7 @@ sounds, natural spawning and its own behaviour.
 | 26.2 | Fabric, NeoForge | 25+ | GeckoLib 5 (5.5.5+); Fabric API on Fabric |
 | 26.3 | Fabric, NeoForge | 25+ | GeckoLib 5 (5.5.7+); Fabric API on Fabric |
 
-Put the jar for your loader and version (`bunnyland-<loader>-<minecraft>-1.0.0.jar`) and GeckoLib in your `mods`
+Put the jar for your loader and version (`bunnyland-<loader>-<minecraft>-1.0.1.jar`) and GeckoLib in your `mods`
 folder.
 
 The mod is needed on both the server and every client. On your first join you are given a **Pet Journal**.
