@@ -52,7 +52,9 @@ jobs:
       matrix:
         include:
           - { minecraft: "1.20.1", loader: fabric, java: "17" }
-          - { minecraft: "1.20.1", loader: forge, java: "17" }
+          # Forge 1.20.1 is left out: its dev server stops before the world loads ("Attempted to load class
+          # LanServerPinger for invalid dist DEDICATED_SERVER", no Bunnyland code involved). Fabric 1.20.1 runs
+          # the same creature code.
           - { minecraft: "1.21.1", loader: fabric, java: "21" }
           - { minecraft: "1.21.1", loader: neoforge, java: "21" }
           - { minecraft: "26.2", loader: fabric, java: "25" }
@@ -89,11 +91,14 @@ jobs:
           java-version: "25"
       - uses: gradle/actions/setup-gradle@v4
       - name: Install Xvfb and Mesa
-        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri libglx-mesa0 mesa-utils
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri libglx-mesa0 mesa-utils mesa-vulkan-drivers libvulkan1 vulkan-tools
       - run: chmod +x gradlew
       - name: Run the client game test
-        timeout-minutes: 25
-        run: xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :fabric:runClientGameTest -PclientGameTest --stacktrace
+        # 26.3 opens its window with SDL and falls back from OpenGL to Vulkan (lavapipe here) when Xvfb has no
+        # matching GLX visual. If neither starts, the game waits forever, hence the short timeout.
+        timeout-minutes: 15
+        run: |
+          xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +extension RENDER" sh -c 'glxinfo -B | head -20; vulkaninfo --summary 2>&1 | head -30; ./gradlew :fabric:runClientGameTest -PclientGameTest --stacktrace'
       - name: Crash reports and errors
         if: always()
         run: |
