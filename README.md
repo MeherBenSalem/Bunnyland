@@ -224,12 +224,24 @@ Useful NBT: `Variant` (index, common variants first), `Happiness` (0–100), `Co
 ## For developers
 
 The repository holds one MultiLoader workspace per Minecraft version, laid out like the other Sugarplum/NightBeam
-mods: `1.20.1/` (common, fabric, forge), `1.21.1/`, `26.2/` and `26.3/` (common, fabric, neoforge). `common` holds all
-gameplay, rendering and data; the loader modules are thin layers (registration, networking, events, spawn rules,
-biome spawns, client registration) behind `platform.IPlatform`.
+mods. `common` holds all gameplay, rendering and data; the loader modules are thin layers (registration, networking,
+events, spawn rules, biome spawns, client registration) behind `platform.IPlatform`.
+
+### Building
+
+Each Minecraft version is a separate Gradle workspace with its own wrapper. These are the only supported targets
+(the NightBeam convention): 8 jars per release, all with the same version.
+
+| Minecraft | Loaders | Java | Folder |
+| --- | --- | --- | --- |
+| 1.20.1 | Forge, Fabric | 17 bytecode (build on 21) | `1.20.1/{common,forge,fabric}` |
+| 1.21.1 | NeoForge, Fabric | 21 | `1.21.1/{common,neoforge,fabric}` |
+| 26.2 | NeoForge, Fabric | 25 | `26.2/{common,neoforge,fabric}` |
+| 26.3 | NeoForge, Fabric | 25 | `26.3/{common,neoforge,fabric}` |
 
 ```
-cd 1.20.1 && ./gradlew build              # fabric/build/libs and forge/build/libs (Java 17)
+./gradlew buildAll                        # every workspace, then the 8 loader jars into releases/
+cd 1.20.1 && ./gradlew build              # Gradle on Java 21 (Java 17 toolchain); fabric/ and forge/build/libs
 cd 1.21.1 && ./gradlew build              # Java 21
 cd 26.2 && ./gradlew build                # Java 25 (26.3 likewise)
 ./gradlew :fabric:runClient               # play in a dev client (also :forge: / :neoforge:)
@@ -239,6 +251,25 @@ python tools/generate_assets.py           # regenerates models, textures, animat
 python tools/generate_sounds.py           # re-synthesises every sound (needs ffmpeg on PATH)
 python tools/port_data.py 1.21.1          # derives 1.21.1/26.2/26.3 resources from the 1.20.1 ones
 ```
+
+The root build hands the 26.x workspaces `JAVA_HOME_25_X64` (or `-Pjava25Home=<jdk>`) and the others
+`JAVA_HOME_21_X64` (or `-Pjava21Home=<jdk>`); without them each workspace uses the current `JAVA_HOME`. Jars land in
+`<workspace>/<loader>/build/libs/bunnyland-<loader>-<minecraft>-<version>.jar`. Every workspace's `gradle.properties`
+carries the same `version=` (`./gradlew checkVersions`; set it with `./gradlew syncVersion -PmodVersion=x.y.z`).
+`python3 scripts/check_targets.py workspaces` checks the targets, the shared version and the metadata ranges. Release
+notes for a version live in `patchnotes/<version>.md`; `release/<version>/` keeps the jars of earlier releases.
+
+### Releasing
+
+CI (`.github/workflows/ci.yml`) builds all 8 jars on every push to `main` that touches the build, checks what is
+inside them, spawns every creature on a dev server for each version and loader, and runs the Fabric 26.2 and 26.3
+client game tests. Publishing to Modrinth and CurseForge is `.github/workflows/publish.yml`, run by hand (`version`,
+`dry_run`) or by a `v*.*.*` tag; it never runs on a plain push. It refuses a second release of the mod on the same day
+(Africa/Tunis), takes the jars from `releases/`, `release/<version>/`, the GitHub Release or a build from source, and
+fails unless exactly the 8 jars are found. It needs the secrets `MODRINTH_TOKEN`, `CURSEFORGE_TOKEN`,
+`CURSEFORGE_API_KEY` and the variables `MODRINTH_ID`, `CURSEFORGE_ID` (it falls back to this project's IDs).
+
+### Tools
 
 The Python tools write `1.20.1/common/src/main/resources` (standard library only). Models are written as
 GeckoLib/Bedrock `.geo.json` with per-face UVs. Textures are painted procedurally per material, with decals for faces

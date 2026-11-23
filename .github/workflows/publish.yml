@@ -1,39 +1,56 @@
-# Publishes every jar in release/<version>/ to Modrinth and CurseForge, and refreshes the Modrinth listing
-# (summary, description, icon, gallery) from marketing/. See scripts/publish.mjs.
+# Publish Bunnyland to Modrinth + CurseForge (NightBeam convention).
 #
-# Secrets: a Modrinth personal access token (Create versions, Write projects, Read projects) and a CurseForge
-# upload API token. Several secret names are accepted; see the Publish step.
+# Runs only by hand (workflow_dispatch) or on a v*.*.* tag; a push to main never releases anything.
+# Uses exactly the 8 convention jars for the version, in this order of sources:
+#   1. releases/bunnyland-<loader>-<minecraft>-<version>.jar (./gradlew dist output, if committed),
+#   2. release/<version>/bunnyland-<loader>-<minecraft>-<version>.jar (the earlier per-version layout, kept as history),
+#   3. the jars attached to the GitHub Release v<version>,
+#   4. a build from source: ./gradlew buildAll (the workspaces must be at <version>).
+# The run fails unless all 8 are found: 1.20.1 Fabric + Forge; 1.21.1, 26.2 and 26.3 Fabric + NeoForge.
+# scripts/publish.mjs uploads each jar with its own Minecraft version and loader, GeckoLib as a required dependency
+# (plus Fabric API on Fabric) and patchnotes/<version>.md as the changelog; it skips a target a site already has, and
+# refreshes the Modrinth listing (marketing/modrinth/, icon, gallery). CurseForge's page is pasted in by hand.
+#
+# Same-day guard (NightBeam convention): scripts/same_day_guard.mjs stops the run if this mod already had a
+# release today (Africa/Tunis day), on Modrinth, CurseForge or an earlier Publish run. A dry run only reports it.
+# It runs before building and again right before the upload, whatever the inputs below say.
+#
+# Repo secrets: MODRINTH_TOKEN, CURSEFORGE_TOKEN, CURSEFORGE_API_KEY. The older names MODRINTH_API_TOKEN, MODRINTH_PAT,
+#   CURSEFORGE_API_TOKEN, CF_TOKEN and CF_API_TOKEN still work as fallbacks until they are renamed.
+# Repo variables: MODRINTH_ID (v33NVt8G), CURSEFORGE_ID (1784884); the workflow falls back to these IDs if the variables are unset
+# The Modrinth project is not public yet, so the guard and every Modrinth read send MODRINTH_TOKEN.
+#
+# Prove it first:  gh workflow run publish.yml -f version=1.0.1 -f dry_run=true
+# Release:         gh workflow run publish.yml -f version=1.0.2 -f dry_run=false   (or: git tag v1.0.2 && git push origin v1.0.2)
 
 name: Publish
 
 on:
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch:
     inputs:
       version:
-        description: Version (the folder under release/)
-        required: true
-        default: "1.0.0"
-      modrinth_id:
-        description: Modrinth project id (Bunnyland)
-        required: true
-        default: v33NVt8G
-      curseforge_id:
-        description: CurseForge project id (Bunny Land)
-        required: true
-        default: "1784884"
+        description: Version (without v) when not tagging; matches jar names / GitHub Release
+        required: false
       dry_run:
-        description: Resolve everything, but upload nothing
-        type: boolean
-        default: true
+        description: Skip uploads and the Modrinth listing update if true (manual runs are dry unless set to false)
+        type: choice
+        options: ["true", "false"]
+        default: "true"
       only:
-        description: Comma-separated targets to publish (e.g. fabric-26.2,forge-1.20.1); empty for all
+        description: "Optional: comma-separated targets to upload (e.g. fabric-26.2,forge-1.20.1); empty for all 8. The same-day guard still applies"
+        required: false
         default: ""
       modrinth_skip:
         description: Comma-separated targets to leave off Modrinth
+        required: false
         default: ""
       curseforge_skip:
-        description: Comma-separated targets to leave off CurseForge (fabric-1.20.1 was uploaded by hand)
-        default: fabric-1.20.1
+        description: Comma-separated targets to leave off CurseForge
+        required: false
+        default: ""
       skip_modrinth:
         description: Skip Modrinth
         type: boolean
@@ -51,28 +68,145 @@ on:
         type: boolean
         default: true
 
+# One Publish at a time per repo, so two runs can't both pass the same-day guard.
+concurrency:
+  group: publish-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: ver
+        shell: bash
+        env:
+          VERSION_INPUT: ${{ inputs.version }}
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          elif [[ -n "$VERSION_INPUT" ]]; then
+            echo "version=${VERSION_INPUT#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "Provide a v*.*.* tag or workflow_dispatch version" >&2
+            exit 1
+          fi
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Publish
+      - name: Test publisher scripts
+        run: node --test scripts/*.test.mjs
+
+      - name: Same-day guard
         env:
+          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'v33NVt8G' }}
+          CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1784884' }}
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN || secrets.CURSEFORGE_API_TOKEN || secrets.CF_TOKEN || secrets.CF_API_TOKEN }}
-          MODRINTH_ID: ${{ inputs.modrinth_id }}
-          CURSEFORGE_ID: ${{ inputs.curseforge_id }}
-          # 1784884 was checked by hand to be Bunny Land; curseforge.com blocks the automatic check from Actions.
-          CURSEFORGE_ID_CONFIRMED: ${{ inputs.curseforge_id == '1784884' }}
-          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PUBLISH_WORKFLOW: publish.yml
+          UPLOAD_STEP: Upload Modrinth + CurseForge
           DRY_RUN: ${{ inputs.dry_run }}
+        run: node scripts/same_day_guard.mjs
+
+      - name: Find prebuilt release jars
+        id: prebuilt
+        shell: bash
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          # Only the 8 convention names are ever picked up; anything else for this version is ignored.
+          mapfile -t NAMES < <(python3 -c 'import sys; sys.path.insert(0, "scripts"); import check_targets as c; print("\n".join(sorted(c.expected_names(sys.argv[1]))))' "$VERSION")
+          found=0
+          for dir in releases "release/$VERSION"; do
+            for name in "${NAMES[@]}"; do
+              if [ -f "$dir/$name" ]; then
+                cp -f "$dir/$name" dist/
+                found=$((found + 1))
+              fi
+            done
+            if [ "$found" -gt 0 ]; then
+              echo "Using $found prebuilt jar(s) from $dir/"
+              break
+            fi
+          done
+          if [ "$found" -gt 0 ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No convention jars for ${VERSION} in releases/ or release/${VERSION}/; will try the GitHub Release, then build from source"
+          fi
+
+      - name: Download GitHub release jars
+        id: ghrelease
+        if: steps.prebuilt.outputs.found != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.ver.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          patterns=()
+          while IFS= read -r name; do patterns+=(--pattern "$name"); done < <(python3 -c 'import sys; sys.path.insert(0, "scripts"); import check_targets as c; print("\n".join(sorted(c.expected_names(sys.argv[1]))))' "$VERSION")
+          if gh release view "v${VERSION}" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release download "v${VERSION}" --repo "${{ github.repository }}" --dir dist --clobber "${patterns[@]}" || true
+          fi
+          count=$(find dist -maxdepth 1 -name 'bunnyland-*.jar' | wc -l)
+          if [ "$count" -gt 0 ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "Using $count jar(s) from GitHub Release v${VERSION}"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No GitHub Release jars for v${VERSION}; building from source"
+          fi
+
+      # 21 stays JAVA_HOME (Gradle for 1.20.1/1.21.1); 17 is the 1.20.1 toolchain; the root build hands 26.x
+      # JAVA_HOME_25_X64.
+      - uses: actions/setup-java@v4
+        if: steps.prebuilt.outputs.found != 'true' && steps.ghrelease.outputs.found != 'true'
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            25
+            21
+
+      - uses: gradle/actions/setup-gradle@v4
+        if: steps.prebuilt.outputs.found != 'true' && steps.ghrelease.outputs.found != 'true'
+
+      - name: Build from source
+        if: steps.prebuilt.outputs.found != 'true' && steps.ghrelease.outputs.found != 'true'
+        shell: bash
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          set -euo pipefail
+          python3 scripts/check_targets.py workspaces
+          ws_version="$(python3 scripts/check_targets.py version)"
+          if [ "$ws_version" != "$VERSION" ]; then
+            echo "::error::The workspaces are at ${ws_version}, not ${VERSION}. Bump them first (./gradlew syncVersion -PmodVersion=${VERSION})."
+            exit 1
+          fi
+          chmod +x gradlew 1.20.1/gradlew 1.21.1/gradlew 26.2/gradlew 26.3/gradlew
+          ./gradlew buildAll --no-daemon
+          python3 scripts/check_targets.py jars --version "$VERSION" --dir releases --list-file built-jars.txt
+          mkdir -p dist
+          xargs -a built-jars.txt cp -f -t dist/
+
+      - name: Verify release jars
+        shell: bash
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
           ONLY: ${{ inputs.only }}
           MODRINTH_SKIP: ${{ inputs.modrinth_skip }}
           CURSEFORGE_SKIP: ${{ inputs.curseforge_skip }}
@@ -80,4 +214,52 @@ jobs:
           SKIP_CURSEFORGE: ${{ inputs.skip_curseforge }}
           UPDATE_LISTING: ${{ inputs.update_listing }}
           UPLOAD_GALLERY: ${{ inputs.upload_gallery }}
-        run: node scripts/publish.mjs
+        run: |
+          set -euo pipefail
+          # Exactly the 8 convention jars, one per loader + Minecraft pair, or the run stops here.
+          python3 scripts/check_targets.py jars --version "$VERSION" --dir dist
+          # Preview what the upload step will send (no tokens here, so no network call).
+          JAR_DIR=dist OFFLINE=true node scripts/publish.mjs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-release
+          path: dist/*.jar
+
+      - name: Same-day guard (again, right before upload)
+        if: ${{ inputs.dry_run != 'true' }}
+        env:
+          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'v33NVt8G' }}
+          CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1784884' }}
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PUBLISH_WORKFLOW: publish.yml
+          UPLOAD_STEP: Upload Modrinth + CurseForge
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: node scripts/same_day_guard.mjs
+
+      # Uploads the versions and refreshes the Modrinth listing (summary, description, icon, gallery) in one step,
+      # so a dry run skips both.
+      - name: Upload Modrinth + CurseForge
+        if: ${{ inputs.dry_run != 'true' }}
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN || secrets.CURSEFORGE_API_TOKEN || secrets.CF_TOKEN || secrets.CF_API_TOKEN }}
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'v33NVt8G' }}
+          CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1784884' }}
+          VERSION: ${{ steps.ver.outputs.version }}
+          JAR_DIR: dist
+          ONLY: ${{ inputs.only }}
+          MODRINTH_SKIP: ${{ inputs.modrinth_skip }}
+          CURSEFORGE_SKIP: ${{ inputs.curseforge_skip }}
+          SKIP_MODRINTH: ${{ inputs.skip_modrinth }}
+          SKIP_CURSEFORGE: ${{ inputs.skip_curseforge }}
+          UPDATE_LISTING: ${{ inputs.update_listing }}
+          UPLOAD_GALLERY: ${{ inputs.upload_gallery }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${MODRINTH_ID:-}" && test -n "${CURSEFORGE_ID:-}"
+          node scripts/publish.mjs

@@ -8,6 +8,8 @@ Listing copy and artwork for CurseForge and Modrinth. Nothing here ships in the 
 | --- | --- |
 | [`curseforge/description.md`](curseforge/description.md) | Full project description (Markdown; also works on Modrinth) |
 | [`curseforge/summary.txt`](curseforge/summary.txt) | Short project summary (226 characters) |
+| [`modrinth/description.md`](modrinth/description.md) | The Modrinth description, made from the CurseForge copy by `python3 tools/make_modrinth_md.py .` (the screenshots go in the project's Gallery tab instead) |
+| [`modrinth/summary.txt`](modrinth/summary.txt) | The Modrinth summary (the same text). The Publish workflow's `update_listing` option sends both to Modrinth |
 | `images/icon.png` | Project avatar |
 
 Image links in the description point at `raw.githubusercontent.com/MeherBenSalem/Bunnyland/main/marketing/images/...`, so they work once this folder is on `main`. To host on CurseForge instead, upload the images to the project gallery and replace each URL.
@@ -21,6 +23,9 @@ The supported versions are listed in these places:
 1. `VERSIONS` at the top of [`source/render.cjs`](source/render.cjs). Add one line, for example `{ minecraft: '26.4', loaders: ['NeoForge', 'Fabric'] },`. The banner's loader pills and version line are built from it. Then rerun the script for `banner`.
 2. The table under **Downloads & Compatibility** in `curseforge/description.md`. Add one row per loader.
 3. The FAQ answers **Do I need GeckoLib?** and **Is there a Fabric or NeoForge version?** in the same file.
+
+Then run `python3 tools/make_modrinth_md.py .` to refresh the Modrinth copy. Only the NightBeam convention's targets are
+listed: 1.20.1 (Fabric, Forge) and 1.21.1, 26.2, 26.3 (Fabric, NeoForge).
 
 No other copy or artwork names a Minecraft version. A new release name or number goes in `RELEASE` in `render.cjs` and in the banner's alt text on the first line of the description.
 

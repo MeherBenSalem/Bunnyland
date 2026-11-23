@@ -1,48 +1,122 @@
-# Builds every Minecraft version (Fabric, Forge and NeoForge jars), starts a dev server for every version and
-# loader that spawns every creature (scripts/server-smoke-test.sh), and starts a real Fabric client on 26.2 and 26.3
-# that spawns and renders them (<version>/fabric/src/gametest). Runs on pull requests, on pushes to fix/** branches
-# and by hand. It never publishes anything.
+# CI for Bunnyland (NightBeam convention; based on Bosses' publisher-checks.yml).
+# Builds all 8 jars (1.20.1 Fabric + Forge; 1.21.1, 26.2, 26.3 Fabric + NeoForge) with ./gradlew buildAll, checks
+# that every workspace has the same version= and that the metadata ranges stay inside their Minecraft line, checks
+# what is inside each jar (the version, Forge's SRG and Fabric's intermediary mappings; formerly build-release.yml),
+# runs the publisher script tests (the same-day guard) and a token-free preview of the upload, starts a dev server for
+# every version and loader that spawns every creature (scripts/server-smoke-test.sh), and starts a real Fabric client
+# on 26.2 and 26.3 that spawns and renders them (<version>/fabric/src/gametest). It never publishes anything.
 
 name: CI
 
 on:
-  pull_request:
   push:
-    branches: ["fix/**", "release/**"]
+    branches: [main]
+    paths:
+      - "1.20.1/**"
+      - "1.21.1/**"
+      - "26.2/**"
+      - "26.3/**"
+      - "scripts/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle.properties"
+      - "gradle/**"
+      - "gradlew"
+      - "gradlew.bat"
+      - "releases/**"
+      - "release/**"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  build:
-    name: Build ${{ matrix.minecraft }}
+  validate:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - { minecraft: "1.20.1", java: "17" }
-          - { minecraft: "1.21.1", java: "21" }
-          - { minecraft: "26.2", java: "25" }
-          - { minecraft: "26.3", java: "25" }
-    defaults:
-      run:
-        working-directory: ${{ matrix.minecraft }}
+        node: [20, 24]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Check publisher syntax
+        run: |
+          for f in scripts/*.mjs; do node --check "$f"; done
+      - name: Test publisher scripts (same-day guard)
+        run: node --test scripts/*.test.mjs
+      - name: Check the 8 targets, one version and metadata ranges
+        run: python3 scripts/check_targets.py workspaces
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 21 stays JAVA_HOME (Gradle for 1.20.1/1.21.1); 17 is the 1.20.1 toolchain; the root build hands 26.x
+      # JAVA_HOME_25_X64.
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: ${{ matrix.java }}
+          java-version: |
+            17
+            25
+            21
       - uses: gradle/actions/setup-gradle@v4
-      - run: chmod +x gradlew
-      - name: Build
-        run: ./gradlew build --stacktrace
+      - name: Build all 8 jars
+        run: |
+          chmod +x gradlew 1.20.1/gradlew 1.21.1/gradlew 26.2/gradlew 26.3/gradlew
+          ./gradlew buildAll --no-daemon
+      - name: Check the 8 jars
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(python3 scripts/check_targets.py version)"
+          # Check what this build produced in <workspace>/<loader>/build/libs (release/ keeps the jars of earlier
+          # releases as history).
+          mkdir -p built-jars ci-jars
+          cp -f */*/build/libs/bunnyland-*-"$version".jar built-jars/
+          python3 scripts/check_targets.py jars --version "$version" --dir built-jars --list-file ci-jars.txt
+          xargs -a ci-jars.txt cp -f -t ci-jars/
+      - name: Check what is inside each jar
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(python3 scripts/check_targets.py version)"
+          for jar in ci-jars/*.jar; do
+            name="$(basename "$jar")"
+            loader="$(echo "$name" | cut -d- -f2)"
+            mc="$(echo "$name" | cut -d- -f3)"
+            dir="$(mktemp -d)"
+            unzip -q "$jar" -d "$dir"
+            butterfly="$dir/com/sugarplumstudios/bunnyland/entity/RainbowButterfly.class"
+            [ -f "$butterfly" ] || { echo "::error::$name has no RainbowButterfly class"; exit 1; }
+            case "$loader" in
+              fabric) grep -q "\"version\": \"$version\"" "$dir/fabric.mod.json" || { echo "::error::$name: fabric.mod.json is not $version"; exit 1; } ;;
+              *) grep -q "Implementation-Version: $version" "$dir/META-INF/MANIFEST.MF" || { echo "::error::$name: manifest is not $version"; exit 1; } ;;
+            esac
+            if [ "$loader" = forge ]; then
+              strings "$butterfly" | grep -q '^f_[0-9]*_$' || { echo "::error::$name is not SRG-mapped"; exit 1; }
+            fi
+            if [ "$loader" = fabric ] && { [ "$mc" = 1.20.1 ] || [ "$mc" = 1.21.1 ]; }; then
+              strings "$butterfly" | grep -q 'class_[0-9]' || { echo "::error::$name is not intermediary-mapped"; exit 1; }
+            fi
+            case "$mc" in
+              26.*) strings "$dir/com/sugarplumstudios/bunnyland/registry/ModEntities.class" | grep -q TEMPT_RANGE || { echo "::error::$name lacks the tempt range fix"; exit 1; } ;;
+            esac
+            echo "OK $name $(stat -c %s "$jar") bytes"
+          done
+      - name: Preview the upload (no tokens, no network)
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(python3 scripts/check_targets.py version)" JAR_DIR=ci-jars OFFLINE=true node scripts/publish.mjs
       - uses: actions/upload-artifact@v4
         with:
-          name: jars-${{ matrix.minecraft }}
-          path: ${{ matrix.minecraft }}/*/build/libs/*.jar
+          name: bunnyland-jars
+          path: ci-jars/*.jar
+          if-no-files-found: error
 
   server-test:
     name: Server test, ${{ matrix.loader }} ${{ matrix.minecraft }}

@@ -1,12 +1,15 @@
-// Publishes every jar in release/<version>/ to Modrinth and CurseForge, and refreshes the Modrinth listing.
-// Run by .github/workflows/publish.yml; also works locally with the same environment variables:
+// Publishes the 8 Bunnyland jars of one version to Modrinth and CurseForge, and refreshes the Modrinth listing.
+// Run by .github/workflows/publish.yml (after the same-day guard); also works locally with the same environment variables:
 //
-//   MODRINTH_TOKEN=... CURSEFORGE_TOKEN=... VERSION=1.0.0 node scripts/publish.mjs
+//   MODRINTH_TOKEN=... CURSEFORGE_TOKEN=... CURSEFORGE_API_KEY=... MODRINTH_ID=v33NVt8G CURSEFORGE_ID=1784884 \
+//     VERSION=1.0.1 JAR_DIR=releases node scripts/publish.mjs
 //
 // Each jar is one target (see TARGETS). A target that is already on a site is skipped, so a rerun only uploads
 // what is missing. ONLY=fabric-26.2,forge-1.20.1 limits a run to some targets.
-// Optional: CHANGELOG_FILE (default patchnotes/<version>.md), DRY_RUN=true, SKIP_MODRINTH=true, SKIP_CURSEFORGE=true,
-// UPDATE_LISTING=false (Modrinth description, summary and icon), UPLOAD_GALLERY=false (Modrinth gallery).
+// Optional: JAR_DIR (default release/<version>), CHANGELOG_FILE (default patchnotes/<version>.md), DRY_RUN=true,
+// SKIP_MODRINTH=true, SKIP_CURSEFORGE=true, UPDATE_LISTING=false (Modrinth description, summary and icon),
+// UPLOAD_GALLERY=false (Modrinth gallery), OFFLINE=true (print what would be sent and stop: no network, no tokens).
+// Every Modrinth read sends MODRINTH_TOKEN, so a project still in review (404 to anonymous reads) can be read.
 // The CurseForge upload API cannot change a project's description or images, so those are pasted in by hand
 // from marketing/ (see marketing/README.md).
 import fs from 'fs';
@@ -30,17 +33,25 @@ const SKIP_MODRINTH = flag('SKIP_MODRINTH', false);
 const SKIP_CURSEFORGE = flag('SKIP_CURSEFORGE', false);
 const UPDATE_LISTING = flag('UPDATE_LISTING', true);
 const UPLOAD_GALLERY = flag('UPLOAD_GALLERY', true);
+const OFFLINE = flag('OFFLINE', false);
+// CurseForge Core API key (read-only): the existing-files check and the project name check.
+const CURSEFORGE_API_KEY = env.CURSEFORGE_API_KEY || env.CURSEFORGE_CORE_KEY || '';
+// 1784884 was checked by hand to be Bunny Land (it is also the publish workflow's fallback ID); curseforge.com
+// blocks the page check from Actions, so when neither the Core API nor the page can name the project, only this
+// ID is accepted unchecked.
+const CURSEFORGE_ID_CHECKED = '1784884';
 
 const version = (env.VERSION || '').replace(/^v/, '');
 if (!version) throw new Error('Set VERSION, e.g. 1.0.0');
-// [loader, Minecraft, Java]. The jar is release/<version>/bunnyland-<loader>-<minecraft>-<version>.jar.
+const JAR_DIR = path.resolve(ROOT, env.JAR_DIR || path.join('release', version));
+// [loader, Minecraft, Java]: the 8 NightBeam convention targets. The jar is <JAR_DIR>/bunnyland-<loader>-<minecraft>-<version>.jar.
 const TARGETS = [
   ['forge', '1.20.1', 17], ['fabric', '1.20.1', 17],
   ['neoforge', '1.21.1', 21], ['fabric', '1.21.1', 21],
   ['neoforge', '26.2', 25], ['fabric', '26.2', 25],
   ['neoforge', '26.3', 25], ['fabric', '26.3', 25],
 ].map(([loader, minecraft, java]) => {
-  const jar = path.join(ROOT, 'release', version, `bunnyland-${loader}-${minecraft}-${version}.jar`);
+  const jar = path.join(JAR_DIR, `bunnyland-${loader}-${minecraft}-${version}.jar`);
   return { key: `${loader}-${minecraft}`, loader, minecraft, java, jar, jarName: path.basename(jar) };
 }).filter((t) => !env.ONLY || env.ONLY.split(',').includes(t.key));
 for (const t of TARGETS) if (!fs.existsSync(t.jar)) throw new Error(`No jar at ${t.jar}`);
@@ -102,8 +113,9 @@ async function modrinth() {
   }
 
   if (UPDATE_LISTING) {
-    const body = fs.readFileSync(path.join(marketing, 'curseforge', 'description.md'), 'utf8');
-    const summary = fs.readFileSync(path.join(marketing, 'curseforge', 'summary.txt'), 'utf8').trim();
+    // marketing/modrinth/ is made from the CurseForge copy by tools/make_modrinth_md.py (screenshots go in the Gallery).
+    const body = fs.readFileSync(path.join(marketing, 'modrinth', 'description.md'), 'utf8');
+    const summary = fs.readFileSync(path.join(marketing, 'modrinth', 'summary.txt'), 'utf8').trim();
     if (DRY_RUN) console.log(`[dry-run] Modrinth listing: summary ${summary.length} chars, body ${body.length} chars, icon`);
     else {
       await call('Modrinth listing', `${api}/project/${MODRINTH_ID}`, {
@@ -138,8 +150,8 @@ async function modrinth() {
   }
 
   const versions = await (await call('Modrinth versions', `${api}/project/${MODRINTH_ID}/version`, { headers: auth })).json();
-  const geckolib = await (await call('Modrinth GeckoLib', `${api}/project/geckolib`)).json();
-  const fabricApi = await (await call('Modrinth Fabric API', `${api}/project/fabric-api`)).json();
+  const geckolib = await (await call('Modrinth GeckoLib', `${api}/project/geckolib`, { headers: auth })).json();
+  const fabricApi = await (await call('Modrinth Fabric API', `${api}/project/fabric-api`, { headers: auth })).json();
   const failed = [];
   for (const t of TARGETS) {
     if (skipOn('MODRINTH_SKIP').includes(t.key)) { console.log(`Modrinth: skipping ${t.key} (MODRINTH_SKIP)`); continue; }
@@ -183,16 +195,30 @@ async function curseforge() {
   const token = env.CURSEFORGE_TOKEN;
   if (!token) throw new Error('CURSEFORGE_TOKEN is not set');
   if (!CURSEFORGE_ID) throw new Error('CURSEFORGE_ID is not set');
-  const page = await call('CurseForge project page', `https://www.curseforge.com/projects/${CURSEFORGE_ID}`, { redirect: 'follow' }, [403]);
-  if (page.status !== 403) {
-    const finalUrl = page.url;
-    const title = ((await page.text()).match(/<title>([^<]*)<\/title>/) || [])[1] || '';
-    console.log(`CurseForge project: ${title.trim()} (${finalUrl})`);
-    if (!looksLikeBunnyland(title, finalUrl)) {
-      throw new Error(`CurseForge project ${CURSEFORGE_ID} is "${title.trim()}" (${finalUrl}), not Bunnyland; refusing to publish to it`);
+  // The Core API names the project; it is not blocked from Actions the way curseforge.com is. A project still in
+  // moderation may not be readable there yet, which falls back to the page check below.
+  const core = CURSEFORGE_API_KEY
+    ? await call('CurseForge project', `https://api.curseforge.com/v1/mods/${CURSEFORGE_ID}`,
+      { headers: { 'x-api-key': CURSEFORGE_API_KEY } }, [403, 404])
+    : null;
+  if (core && core.ok) {
+    const mod = (await core.json()).data || {};
+    console.log(`CurseForge project: ${mod.name} (${mod.slug})`);
+    if (!looksLikeBunnyland(mod.name, mod.slug)) {
+      throw new Error(`CurseForge project ${CURSEFORGE_ID} is "${mod.name}" (${mod.slug}), not Bunnyland; refusing to publish to it`);
     }
-  } else if (env.CURSEFORGE_ID_CONFIRMED !== 'true') {
-    throw new Error(`Could not read CurseForge project ${CURSEFORGE_ID} to check it is Bunnyland; set CURSEFORGE_ID_CONFIRMED=true to skip the check`);
+  } else {
+    const page = await call('CurseForge project page', `https://www.curseforge.com/projects/${CURSEFORGE_ID}`, { redirect: 'follow' }, [403]);
+    if (page.status !== 403) {
+      const finalUrl = page.url;
+      const title = ((await page.text()).match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+      console.log(`CurseForge project: ${title.trim()} (${finalUrl})`);
+      if (!looksLikeBunnyland(title, finalUrl)) {
+        throw new Error(`CurseForge project ${CURSEFORGE_ID} is "${title.trim()}" (${finalUrl}), not Bunnyland; refusing to publish to it`);
+      }
+    } else if (CURSEFORGE_ID !== CURSEFORGE_ID_CHECKED) {
+      throw new Error(`Could not read CurseForge project ${CURSEFORGE_ID} to check it is Bunnyland (Core API: ${core ? core.status : 'no CURSEFORGE_API_KEY'})`);
+    }
   }
   const api = 'https://minecraft.curseforge.com/api';
   const auth = { 'X-Api-Token': token };
@@ -219,7 +245,7 @@ async function curseforge() {
     try { return versionId(typeSlug, name); } catch (error) { console.warn(`${error.message}; leaving it out`); return null; }
   };
   const existing = await (await call('CurseForge project files', `https://api.curseforge.com/v1/mods/${CURSEFORGE_ID}/files?pageSize=50`,
-    { headers: { 'x-api-key': env.CURSEFORGE_CORE_KEY || '' } }, [401, 403, 404])).json().catch(() => ({}));
+    { headers: { 'x-api-key': CURSEFORGE_API_KEY } }, [401, 403, 404])).json().catch(() => ({}));
   const have = new Set((existing.data || []).map((f) => f.fileName));
   const failed = [];
   for (const t of TARGETS) {
@@ -255,6 +281,32 @@ async function curseforge() {
   if (failed.length) throw new Error(`targets ${failed.join(', ')}`);
 }
 
+// OFFLINE=true: what each site would get, from the jar names alone. No tokens, no network (CI and dry-run previews).
+function plan() {
+  console.log(`[offline] ${TITLE} ${version} from ${path.relative(ROOT, JAR_DIR) || '.'}, changelog ${changelog.length} chars`);
+  for (const t of TARGETS) {
+    const deps = ['geckolib', ...(t.loader === 'fabric' ? ['fabric-api'] : [])].join(' + ');
+    const sites = [
+      SKIP_MODRINTH || skipOn('MODRINTH_SKIP').includes(t.key) ? null : `Modrinth ${version}+${t.loader}-${t.minecraft}`,
+      SKIP_CURSEFORGE || skipOn('CURSEFORGE_SKIP').includes(t.key) ? null : `CurseForge (Java ${t.java})`,
+    ].filter(Boolean);
+    console.log(`[offline] ${t.jarName}: ${LOADER_NAME[t.loader]} ${t.minecraft}, requires ${deps}; ${sites.join(', ') || 'skipped on both sites'}`);
+  }
+  if (UPDATE_LISTING) {
+    for (const f of ['modrinth/description.md', 'modrinth/summary.txt', 'images/icon.png']) {
+      if (!fs.existsSync(path.join(marketing, f))) throw new Error(`Missing marketing/${f}`);
+    }
+    console.log('[offline] Modrinth listing: marketing/modrinth/description.md, summary.txt, images/icon.png');
+  }
+  if (UPLOAD_GALLERY) {
+    for (const [file] of GALLERY) {
+      if (!fs.existsSync(path.join(marketing, 'images', 'screenshots', file))) throw new Error(`Missing gallery image ${file}`);
+    }
+    console.log(`[offline] Modrinth gallery: ${GALLERY.length} images`);
+  }
+}
+
+if (OFFLINE) { plan(); process.exit(0); }
 console.log(`Publishing ${TITLE} ${version}: ${TARGETS.map((t) => t.key).join(', ')}${DRY_RUN ? ' [dry run]' : ''}`);
 const failures = [];
 for (const [name, run, skip] of [['Modrinth', modrinth, SKIP_MODRINTH], ['CurseForge', curseforge, SKIP_CURSEFORGE]]) {
