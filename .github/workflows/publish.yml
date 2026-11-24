@@ -1,4 +1,4 @@
-# Publish Bunnyland to Modrinth + CurseForge (NightBeam convention).
+# Publish Bunnyland to CurseForge (NightBeam convention: CurseForge only since 24 Nov 2026).
 #
 # Runs only by hand (workflow_dispatch) or on a v*.*.* tag; a push to main never releases anything.
 # Uses exactly the 8 convention jars for the version, in this order of sources:
@@ -8,17 +8,17 @@
 #   4. a build from source: ./gradlew buildAll (the workspaces must be at <version>).
 # The run fails unless all 8 are found: 1.20.1 Fabric + Forge; 1.21.1, 26.2 and 26.3 Fabric + NeoForge.
 # scripts/publish.mjs uploads each jar with its own Minecraft version and loader, GeckoLib as a required dependency
-# (plus Fabric API on Fabric) and patchnotes/<version>.md as the changelog; it skips a target a site already has, and
-# refreshes the Modrinth listing (marketing/modrinth/, icon, gallery). CurseForge's page is pasted in by hand.
+# (plus Fabric API on Fabric) and patchnotes/<version>.md as the changelog; it skips a target CurseForge already has.
+# CurseForge's page is pasted in by hand.
 #
 # Same-day guard (NightBeam convention): scripts/same_day_guard.mjs stops the run if this mod already had a
-# release today (Africa/Tunis day), on Modrinth, CurseForge or an earlier Publish run. A dry run only reports it.
+# release today (Africa/Tunis day), on CurseForge or in an earlier Publish run. A dry run only reports it.
 # It runs before building and again right before the upload, whatever the inputs below say.
 #
-# Repo secrets: MODRINTH_TOKEN, CURSEFORGE_TOKEN, CURSEFORGE_API_KEY. The older names MODRINTH_API_TOKEN, MODRINTH_PAT,
-#   CURSEFORGE_API_TOKEN, CF_TOKEN and CF_API_TOKEN still work as fallbacks until they are renamed.
-# Repo variables: MODRINTH_ID (v33NVt8G), CURSEFORGE_ID (1784884); the workflow falls back to these IDs if the variables are unset
-# The Modrinth project is not public yet, so the guard and every Modrinth read send MODRINTH_TOKEN.
+# Repo secrets: CURSEFORGE_TOKEN (upload token), CURSEFORGE_API_KEY (Core API key, for the same-day guard). The older
+#   upload-token names CURSEFORGE_API_TOKEN, CF_TOKEN and CF_API_TOKEN still work as fallbacks until they are renamed.
+# Repo variable: CURSEFORGE_ID (1784884); the workflow falls back to this ID if the variable is unset
+# The existing Modrinth project stays up as it is but gets no new versions.
 #
 # Prove it first:  gh workflow run publish.yml -f version=1.0.1 -f dry_run=true
 # Release:         gh workflow run publish.yml -f version=1.0.2 -f dry_run=false   (or: git tag v1.0.2 && git push origin v1.0.2)
@@ -35,7 +35,7 @@ on:
         description: Version (without v) when not tagging; matches jar names / GitHub Release
         required: false
       dry_run:
-        description: Skip uploads and the Modrinth listing update if true (manual runs are dry unless set to false)
+        description: Skip uploads if true (manual runs are dry unless set to false)
         type: choice
         options: ["true", "false"]
         default: "true"
@@ -43,30 +43,10 @@ on:
         description: "Optional: comma-separated targets to upload (e.g. fabric-26.2,forge-1.20.1); empty for all 8. The same-day guard still applies"
         required: false
         default: ""
-      modrinth_skip:
-        description: Comma-separated targets to leave off Modrinth
-        required: false
-        default: ""
       curseforge_skip:
         description: Comma-separated targets to leave off CurseForge
         required: false
         default: ""
-      skip_modrinth:
-        description: Skip Modrinth
-        type: boolean
-        default: false
-      skip_curseforge:
-        description: Skip CurseForge
-        type: boolean
-        default: false
-      update_listing:
-        description: Update the Modrinth summary, description and icon from marketing/
-        type: boolean
-        default: true
-      upload_gallery:
-        description: Add missing Modrinth gallery images from marketing/images/screenshots/
-        type: boolean
-        default: true
 
 # One Publish at a time per repo, so two runs can't both pass the same-day guard.
 concurrency:
@@ -106,13 +86,11 @@ jobs:
 
       - name: Same-day guard
         env:
-          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'v33NVt8G' }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1784884' }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
           GITHUB_TOKEN: ${{ github.token }}
           PUBLISH_WORKFLOW: publish.yml
-          UPLOAD_STEP: Upload Modrinth + CurseForge
+          UPLOAD_STEP: Upload CurseForge|Upload Modrinth + CurseForge
           DRY_RUN: ${{ inputs.dry_run }}
         run: node scripts/same_day_guard.mjs
 
@@ -208,12 +186,7 @@ jobs:
         env:
           VERSION: ${{ steps.ver.outputs.version }}
           ONLY: ${{ inputs.only }}
-          MODRINTH_SKIP: ${{ inputs.modrinth_skip }}
           CURSEFORGE_SKIP: ${{ inputs.curseforge_skip }}
-          SKIP_MODRINTH: ${{ inputs.skip_modrinth }}
-          SKIP_CURSEFORGE: ${{ inputs.skip_curseforge }}
-          UPDATE_LISTING: ${{ inputs.update_listing }}
-          UPLOAD_GALLERY: ${{ inputs.upload_gallery }}
         run: |
           set -euo pipefail
           # Exactly the 8 convention jars, one per loader + Minecraft pair, or the run stops here.
@@ -229,37 +202,26 @@ jobs:
       - name: Same-day guard (again, right before upload)
         if: ${{ inputs.dry_run != 'true' }}
         env:
-          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'v33NVt8G' }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1784884' }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
           GITHUB_TOKEN: ${{ github.token }}
           PUBLISH_WORKFLOW: publish.yml
-          UPLOAD_STEP: Upload Modrinth + CurseForge
+          UPLOAD_STEP: Upload CurseForge|Upload Modrinth + CurseForge
           DRY_RUN: ${{ inputs.dry_run }}
         run: node scripts/same_day_guard.mjs
 
-      # Uploads the versions and refreshes the Modrinth listing (summary, description, icon, gallery) in one step,
-      # so a dry run skips both.
-      - name: Upload Modrinth + CurseForge
+      - name: Upload CurseForge
         if: ${{ inputs.dry_run != 'true' }}
         env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN || secrets.MODRINTH_API_TOKEN || secrets.MODRINTH_PAT }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN || secrets.CURSEFORGE_API_TOKEN || secrets.CF_TOKEN || secrets.CF_API_TOKEN }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'v33NVt8G' }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1784884' }}
           VERSION: ${{ steps.ver.outputs.version }}
           JAR_DIR: dist
           ONLY: ${{ inputs.only }}
-          MODRINTH_SKIP: ${{ inputs.modrinth_skip }}
           CURSEFORGE_SKIP: ${{ inputs.curseforge_skip }}
-          SKIP_MODRINTH: ${{ inputs.skip_modrinth }}
-          SKIP_CURSEFORGE: ${{ inputs.skip_curseforge }}
-          UPDATE_LISTING: ${{ inputs.update_listing }}
-          UPLOAD_GALLERY: ${{ inputs.upload_gallery }}
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${MODRINTH_ID:-}" && test -n "${CURSEFORGE_ID:-}"
+          test -n "${CURSEFORGE_ID:-}" || { echo "Set the repo variable CURSEFORGE_ID" >&2; exit 1; }
           node scripts/publish.mjs

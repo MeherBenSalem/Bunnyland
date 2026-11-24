@@ -263,11 +263,12 @@ notes for a version live in `patchnotes/<version>.md`; `release/<version>/` keep
 
 CI (`.github/workflows/ci.yml`) builds all 8 jars on every push to `main` that touches the build, checks what is
 inside them, spawns every creature on a dev server for each version and loader, and runs the Fabric 26.2 and 26.3
-client game tests. Publishing to Modrinth and CurseForge is `.github/workflows/publish.yml`, run by hand (`version`,
+client game tests. Publishing to CurseForge is `.github/workflows/publish.yml`, run by hand (`version`,
 `dry_run`) or by a `v*.*.*` tag; it never runs on a plain push. It refuses a second release of the mod on the same day
 (Africa/Tunis), takes the jars from `releases/`, `release/<version>/`, the GitHub Release or a build from source, and
-fails unless exactly the 8 jars are found. It needs the secrets `MODRINTH_TOKEN`, `CURSEFORGE_TOKEN`,
-`CURSEFORGE_API_KEY` and the variables `MODRINTH_ID`, `CURSEFORGE_ID` (it falls back to this project's IDs).
+fails unless exactly the 8 jars are found. It needs the secrets `CURSEFORGE_TOKEN` (upload token) and
+`CURSEFORGE_API_KEY` (Core API key) and the variable `CURSEFORGE_ID` (it falls back to this project's ID). NightBeam
+publishes to CurseForge only; the Modrinth page stays up but gets no new versions.
 
 ### Tools
 
